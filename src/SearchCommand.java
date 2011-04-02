@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class SearchCommand extends Command {
 	public static enum SearchMode { EXACT, PREFIX }
+	public static final String SEARCH_EXACT_SUFFIX = "$";
 	private static final String EMPTY_MATCHES_MESSAGE = "no sequence founds";
 	private static final String MATCH_FOUND_PREFIX = "sequence: ";
 	private static final String NODES_VISITED_PREFIX = "# of nodes visisted: ";
@@ -21,6 +22,7 @@ public class SearchCommand extends Command {
 	private Sequence searchSequence;
 	private int numNodesVisited;
 	private List<Sequence> matches;
+	
 	
 	/**
 	 * Creates a search operation where you can specify exact search
@@ -41,8 +43,14 @@ public class SearchCommand extends Command {
 	 * @throws SequenceException 
 	 */
 	public SearchCommand(String sequenceDescriptor) throws SequenceException {
+		if(sequenceDescriptor.endsWith(SEARCH_EXACT_SUFFIX)){
+			mode = SearchMode.EXACT;
+			sequenceDescriptor = sequenceDescriptor.substring(0, sequenceDescriptor.length()-SEARCH_EXACT_SUFFIX.length()-1);
+		}else{
+			mode = SearchMode.PREFIX;
+		}
+		
 		searchSequence = createSequence(sequenceDescriptor);
-		mode = SearchMode.PREFIX;
 	}
 
 	/**

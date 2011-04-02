@@ -8,7 +8,8 @@
  */
 public class SequenceLeafNode implements Node {
 	private Sequence sequence; // Sequence data contained in this node
-
+	private SequenceFileHandle fileHandle; // References where the sequence is stored
+	
 	/**
 	 * Constructs a SequenceNode given a Sequence
 	 * 

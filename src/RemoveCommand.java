@@ -4,8 +4,7 @@
  *
  */
 public class RemoveCommand extends Command {
-//	private Sequence sequence;
-	private String sequenceID;
+	private Sequence sequence;
 	
 	/**
 	 * Construct a RemoveOperation given a sequenceDescriptor
@@ -13,8 +12,7 @@ public class RemoveCommand extends Command {
 	 * @throws SequenceException 
 	 */
 	public RemoveCommand(String sequenceID) throws SequenceException{
-//		sequence = createSequence(sequenceID);
-		this.sequenceID = sequenceID;
+		sequence = createSequence(sequenceID);
 	}
 	
 	/**
@@ -22,8 +20,7 @@ public class RemoveCommand extends Command {
 	 */
 	@Override
 	public Node execute(Node root) {
-//		return root.remove(sequence);
-		return root;
+		return root.remove(sequence);
 	}
 	
 	/**

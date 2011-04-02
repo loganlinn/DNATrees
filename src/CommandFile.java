@@ -23,7 +23,6 @@ public class CommandFile {
 	private static final String REMOVE_COMMAND = "remove";
 	private static final String PRINT_COMMAND = "print";
 	private static final String SEARCH_COMMAND = "search";
-	private static final String SEARCH_EXACT_SUFFIX = "$";
 	private static final String NO_INSERT_COMMAND_FOUND_ERROR = "Command file must contain an insert command";
 	private static final String UNKNOWN_COMMAND_ERROR_PREFIX = "Unknown command, ";
 	private static final String UNKNOWN_PRINT_MODE_ERROR_PREFIX = "Unknown print mode, ";
@@ -123,22 +122,11 @@ public class CommandFile {
 					argument = getNextArgument(lineTokens); // argument is a
 															// sequence
 															// descriptor
-
-					// Check the sequenceDescriptor if it has a $ suffix
 					if (argument != null) {
-						boolean exactSearch = argument
-								.endsWith(SEARCH_EXACT_SUFFIX);
-						if (exactSearch) {
-							// Create an exact search command, add it to the
-							// command queue
-							argument = argument.substring(0,
-									argument.length() - 1);
-						}
-
-						// Create a normal search command, add it to the
-						// command queue
-						commandList
-								.add(new SearchCommand(argument, exactSearch));
+						commandList.add(new SearchCommand(argument));
+					} else {
+						throw new SequenceException(SEARCH_COMMAND
+								+ " missing argument." + getLineNumberMessage());
 					}
 				} else {
 					// The command isn't recognized, throw an exception
