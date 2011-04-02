@@ -1,3 +1,5 @@
+*.swp
+*.un~
 bin
 submission
 cs3114_export.py

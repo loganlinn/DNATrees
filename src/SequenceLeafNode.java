@@ -23,14 +23,8 @@ public class SequenceLeafNode implements Node {
 	 * 
 	 */
 	@Override
-	public void print(int level, int mode) {
+	public void print(int level) {
 		String sequenceValue = sequence.toString();
-
-		if (mode == PrintCommand.PRINT_MODE_LENGTHS) {
-			sequenceValue += ": length " + sequence.length();
-		} else if (mode == PrintCommand.PRINT_MODE_STATS) {
-			sequenceValue += ": " + sequence.stats();
-		}
 
 		PrintCommand.printSequenceLeafNode(level, sequenceValue);
 	}
@@ -54,7 +48,7 @@ public class SequenceLeafNode implements Node {
 		// sequences here
 		if (this.sequence.equals(sequence)) {
 			// Otherwise, we must have the identical sequence
-			InsertCommand.duplicateSequence(sequence);
+			InsertCommand.duplicateSequenceError(sequence);
 			// Return this so not modify tree structure
 			return this;
 		} else {

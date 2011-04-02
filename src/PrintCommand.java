@@ -12,17 +12,12 @@ public class PrintCommand extends Command{
 	public static final String LEVEL_INDENT = "  ";		// Value to print for indentations
 	public static final String INTERNAL_NODE = "I";		// Value to print for internal node
 	public static final String EMPTY_LEAF_NODE = "E";	// Value to print for empty leaf nodes
-	public static final int PRINT_MODE_NORMAL = 0;		// Passed to print for normal print mode
-	public static final int PRINT_MODE_LENGTHS = 1;		// Passed to print for lengths print mode
-	public static final int PRINT_MODE_STATS = 2;		// Passed to print for stats print mode
 	
-	protected final int mode;
 	
 	/**
 	 * Constructs a normal PrintOperation
 	 */
-	public PrintCommand(int mode){
-		this.mode = mode;
+	public PrintCommand(){
 	}
 	
 	/**
@@ -30,7 +25,7 @@ public class PrintCommand extends Command{
 	 */
 	@Override
 	public Node execute(Node root) {
-		root.print(ROOT_LEVEL, mode);
+		root.print(ROOT_LEVEL);
 		out.println();	// print an empty line for readability
 		return root;
 	}

@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -23,8 +23,6 @@ public class CommandFile {
 	private static final String REMOVE_COMMAND = "remove";
 	private static final String PRINT_COMMAND = "print";
 	private static final String SEARCH_COMMAND = "search";
-	private static final String PRINT_LENGTHS_ARGUMENT = "lengths";
-	private static final String PRINT_STATS_ARGUMENT = "stats";
 	private static final String SEARCH_EXACT_SUFFIX = "$";
 	private static final String NO_INSERT_COMMAND_FOUND_ERROR = "Command file must contain an insert command";
 	private static final String UNKNOWN_COMMAND_ERROR_PREFIX = "Unknown command, ";
@@ -37,6 +35,9 @@ public class CommandFile {
 										// command file
 	private int lineNumber = 0; // Tracks which line of the command file we are
 								// parsing
+
+	private PrintStream out = System.out; // Assign output to a print stream for
+											// configurability
 
 	/**
 	 * Constructs a CommandFile given the path to a command file
@@ -61,6 +62,14 @@ public class CommandFile {
 		return null;
 	}
 
+	private int getNextIntArgument(StringTokenizer tokenizer)
+			throws NumberFormatException {
+		if (tokenizer.hasMoreTokens()) {
+			return Integer.parseInt(tokenizer.nextToken());
+		}
+		return -1;
+	}
+
 	/**
 	 * Parses the command file Throws an appropriate exception if an error is
 	 * encountered Checks for the following errors: - Invalid character in
@@ -78,20 +87,22 @@ public class CommandFile {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new DataInputStream(new FileInputStream(commandFile))));
-		String line, argument;
+		String line, command, argument;
+		int length;
 		boolean commandHasArgument;
 		while ((line = br.readLine()) != null) {
 			lineNumber++;
 			StringTokenizer lineTokens = new StringTokenizer(line);
 			if (lineTokens.hasMoreTokens()) {
-				String command = lineTokens.nextToken();
+				command = lineTokens.nextToken();
 
 				if (INSERT_COMMAND.equals(command)) {
 					/*
 					 * Insert command
 					 */
 					argument = getNextArgument(lineTokens);
-					commandList.add(new InsertCommand(argument));
+					length = getNextIntArgument(lineTokens);
+					commandList.add(new InsertCommand(argument, length));
 				} else if (REMOVE_COMMAND.equals(command)) {
 					/*
 					 * Remove command
@@ -100,29 +111,11 @@ public class CommandFile {
 					commandList.add(new RemoveCommand(argument));
 				} else if (PRINT_COMMAND.equals(command)) {
 					/*
-					 * Print command, find the mode
+					 * Print command
 					 */
-					argument = getNextArgument(lineTokens); // argument
-															// (optional) is the
-															// print mode
-					int mode;
-					
-					if (argument == null) {
-						// regular print command
-						mode = PrintCommand.PRINT_MODE_NORMAL;
-					} else if (PRINT_LENGTHS_ARGUMENT.equals(argument)) {
-						// print lengths command
-						mode = PrintCommand.PRINT_MODE_LENGTHS;
-					} else if (PRINT_STATS_ARGUMENT.equals(argument)) {
-						// print stats command
-						mode = PrintCommand.PRINT_MODE_STATS;
-					} else {
-						throw new P3Exception(UNKNOWN_PRINT_MODE_ERROR_PREFIX
-								+ argument + getLineNumberMessage());
-					}
-					
-					commandList.add(new PrintCommand(mode));
-					
+
+					commandList.add(new PrintCommand());
+
 				} else if (SEARCH_COMMAND.equals(command)) {
 					/*
 					 * Search command, find the mode
@@ -139,18 +132,21 @@ public class CommandFile {
 							// Create an exact search command, add it to the
 							// command queue
 							argument = argument.substring(0,
-									argument.length() - 2);
+									argument.length() - 1);
 						}
 
 						// Create a normal search command, add it to the
 						// command queue
-						commandList.add(new SearchCommand(argument, exactSearch));
+						commandList
+								.add(new SearchCommand(argument, exactSearch));
 					}
 				} else {
 					// The command isn't recognized, throw an exception
 					throw new P3Exception(UNKNOWN_COMMAND_ERROR_PREFIX
 							+ command + getLineNumberMessage());
 				}
+
+				out.println("CREATED:" + command);
 			}
 		}
 

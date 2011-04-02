@@ -7,15 +7,20 @@
  */
 public class InsertCommand extends Command {
 	private Sequence sequence;
-
+	private int length;
+	
 	/**
 	 * Construct an InsertOperation from a sequenceDescriptor
 	 * 
 	 * @param sequenceDescriptor
 	 * @throws SequenceException
 	 */
-	public InsertCommand(String sequenceDescriptor) throws SequenceException {
+	public InsertCommand(String sequenceDescriptor, int length) throws SequenceException {
 		sequence = createSequence(sequenceDescriptor);
+//		if(length < 1){
+//			throw new SequenceException("Invalid length");
+//		}
+		this.length = length;
 	}
 
 	/**
@@ -31,7 +36,7 @@ public class InsertCommand extends Command {
 	 * 
 	 * @param sequence
 	 */
-	public static void duplicateSequence(Sequence sequence) {
+	public static void duplicateSequenceError(Sequence sequence) {
 		out.println("ERROR: Sequence, \"" + sequence.toString()
 				+ "\" already exists in DNA Tree.");
 	}

@@ -27,4 +27,5 @@ insert ACTTA
   
            
            
+search A$
               

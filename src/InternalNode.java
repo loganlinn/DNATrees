@@ -102,16 +102,16 @@ public class InternalNode implements Node {
 	 * Print the tree recursively with a preorder traversal
 	 */
 	@Override
-	public void print(int level, int mode) {
+	public void print(int level) {
 		// Visit self
 		PrintCommand.printInternalNode(level);
 		// Visit children left to right: indent
 		level++;
-		A.print(level, mode);
-		C.print(level, mode);
-		G.print(level, mode);
-		T.print(level, mode);
-		$.print(level, mode);
+		A.print(level);
+		C.print(level);
+		G.print(level);
+		T.print(level);
+		$.print(level);
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class InternalNode implements Node {
 			 * We can assume the prefix is a SequenceLeafNode because it is not
 			 * empty and cannot be internal
 			 */
-			InsertCommand.duplicateSequence(sequence);
+			InsertCommand.duplicateSequenceError(sequence);
 		} else {
 			/*
 			 * Prefix node isn't empty and isn't duplicate, assign sequence to

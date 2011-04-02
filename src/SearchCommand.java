@@ -11,14 +11,13 @@ import java.util.List;
  * @author loganlinn
  * 
  */
-public class SearchCommand extends Command {	
-	public static final int SEARCH_MODE_EXACT = 1;
-	public static final int SEARCH_MODE_PREFIX = 0;
+public class SearchCommand extends Command {
+	public static enum SearchMode { EXACT, PREFIX }
 	private static final String EMPTY_MATCHES_MESSAGE = "no sequence founds";
 	private static final String MATCH_FOUND_PREFIX = "sequence: ";
 	private static final String NODES_VISITED_PREFIX = "# of nodes visisted: ";
 	
-	private final int mode; // Default mode
+	private final SearchMode mode; // Default mode
 	private Sequence searchSequence;
 	private int numNodesVisited;
 	private List<Sequence> matches;
@@ -30,7 +29,7 @@ public class SearchCommand extends Command {
 	 * @throws SequenceException 
 	 */
 	public SearchCommand(String sequenceDescriptor, boolean exactSearch) throws SequenceException{
-		mode = exactSearch ? SEARCH_MODE_EXACT : SEARCH_MODE_PREFIX;
+		mode = exactSearch ? SearchMode.EXACT : SearchMode.PREFIX;
 		searchSequence = createSequence(sequenceDescriptor);
 	}
 	
@@ -43,7 +42,7 @@ public class SearchCommand extends Command {
 	 */
 	public SearchCommand(String sequenceDescriptor) throws SequenceException {
 		searchSequence = createSequence(sequenceDescriptor);
-		mode = SEARCH_MODE_PREFIX;
+		mode = SearchMode.PREFIX;
 	}
 
 	/**
@@ -85,7 +84,7 @@ public class SearchCommand extends Command {
 	 * @return
 	 */
 	public boolean matchExact(){
-		return (mode == SEARCH_MODE_EXACT);
+		return (mode == SearchMode.EXACT);
 	}
 	
 	/**
@@ -93,6 +92,7 @@ public class SearchCommand extends Command {
 	 * Called when the search has completed
 	 */
 	public void reportResults(){
+		out.println("Search "+searchSequence.toString()+" ["+mode.toString()+"]");
 		out.println(NODES_VISITED_PREFIX+this.numNodesVisited);
 		if(matches.isEmpty()){
 			// Print a message if we don't have any matches
@@ -109,7 +109,7 @@ public class SearchCommand extends Command {
 	/**
 	 * @return the mode
 	 */
-	public int getMode() {
+	public SearchMode getMode() {
 		return mode;
 	}
 

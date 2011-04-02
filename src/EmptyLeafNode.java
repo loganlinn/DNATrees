@@ -36,7 +36,7 @@ public class EmptyLeafNode implements Node {
 	 * Print representation of empty leaf node
 	 */
 	@Override
-	public void print(int level, int mode) {
+	public void print(int level) {
 		PrintCommand.printEmptyLeafNode(level);
 	}
 

@@ -46,5 +46,5 @@ public abstract class Command {
 	public static void invalidSequence(Sequence sequence) {
 		out.println("ERROR: Invaid sequence, \""+sequence.toString()+"\".");
 	}
-	
+
 }
