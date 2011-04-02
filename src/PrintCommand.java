@@ -16,13 +16,13 @@ public class PrintCommand extends Command{
 	public static final int PRINT_MODE_LENGTHS = 1;		// Passed to print for lengths print mode
 	public static final int PRINT_MODE_STATS = 2;		// Passed to print for stats print mode
 	
-	protected int mode = PRINT_MODE_NORMAL;
+	protected final int mode;
 	
 	/**
 	 * Constructs a normal PrintOperation
 	 */
-	public PrintCommand(){
-
+	public PrintCommand(int mode){
+		this.mode = mode;
 	}
 	
 	/**

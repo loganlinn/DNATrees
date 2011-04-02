@@ -35,7 +35,7 @@ public abstract class Command {
 			throw new SequenceException(sequenceDescriptor);
 		}
 		//TODO: regular expression the sequence descriptor for valid alpahbet
-		return new ArraySequence(sequenceDescriptor);
+		return new Sequence(sequenceDescriptor);
 	}
 	
 	/**

@@ -31,12 +31,13 @@ public class CommandFile {
 	private static final String UNKNOWN_PRINT_MODE_ERROR_PREFIX = "Unknown print mode, ";
 	private static final String LINE_NUMBER_MESSAGE_PREFIX = "(Line ";
 	private static final String LINE_NUMBER_MESSAGE_SUFFIX = ")";
-	
+
 	private String commandFilePath; // Path to command file
 	private Queue<Command> commandList; // Collection of commands extracted from
 										// command file
-	private int lineNumber = 0; // Tracks which line of the command file we are parsing
-	
+	private int lineNumber = 0; // Tracks which line of the command file we are
+								// parsing
+
 	/**
 	 * Constructs a CommandFile given the path to a command file
 	 * 
@@ -61,13 +62,10 @@ public class CommandFile {
 	}
 
 	/**
-	 * Parses the command file
-	 * Throws an appropriate exception if an error is encountered
-	 * Checks for the following errors:
-	 * - Invalid character in sequence
-	 * - Unknown command
-	 * - Expected argument missing
-	 *  
+	 * Parses the command file Throws an appropriate exception if an error is
+	 * encountered Checks for the following errors: - Invalid character in
+	 * sequence - Unknown command - Expected argument missing
+	 * 
 	 * @throws SequenceException
 	 * @throws IOException
 	 * @throws P2Exception
@@ -104,48 +102,65 @@ public class CommandFile {
 					/*
 					 * Print command, find the mode
 					 */
-					argument = getNextArgument(lineTokens); // argument (optional) is the print mode
+					argument = getNextArgument(lineTokens); // argument
+															// (optional) is the
+															// print mode
+					int mode;
+					
 					if (argument == null) {
 						// regular print command
-						commandList.add(new PrintCommand());
+						mode = PrintCommand.PRINT_MODE_NORMAL;
 					} else if (PRINT_LENGTHS_ARGUMENT.equals(argument)) {
 						// print lengths command
-						commandList.add(new PrintLengthsCommand());
+						mode = PrintCommand.PRINT_MODE_LENGTHS;
 					} else if (PRINT_STATS_ARGUMENT.equals(argument)) {
 						// print stats command
-						commandList.add(new PrintStatsCommand());
+						mode = PrintCommand.PRINT_MODE_STATS;
 					} else {
-						throw new P2Exception(UNKNOWN_PRINT_MODE_ERROR_PREFIX+argument+getLineNumberMessage());
+						throw new P2Exception(UNKNOWN_PRINT_MODE_ERROR_PREFIX
+								+ argument + getLineNumberMessage());
 					}
+					
+					commandList.add(new PrintCommand(mode));
+					
 				} else if (SEARCH_COMMAND.equals(command)) {
 					/*
 					 * Search command, find the mode
 					 */
-					argument = getNextArgument(lineTokens); // argument is a sequence descriptor
-					
+					argument = getNextArgument(lineTokens); // argument is a
+															// sequence
+															// descriptor
+
 					// Check the sequenceDescriptor if it has a $ suffix
 					if (argument != null) {
-						if (argument.endsWith(SEARCH_EXACT_SUFFIX)) {
-							// Create an exact search command, add it to the command queue
-							commandList.add(new ExactSearchCommand(argument
-									.substring(0, argument.length() - 2)));
-						} else {
-							// Create a normal search command, add it to the command queue
-							commandList.add(new SearchCommand(argument));
+						boolean exactSearch = argument
+								.endsWith(SEARCH_EXACT_SUFFIX);
+						if (exactSearch) {
+							// Create an exact search command, add it to the
+							// command queue
+							argument = argument.substring(0,
+									argument.length() - 2);
 						}
+
+						// Create a normal search command, add it to the
+						// command queue
+						commandList.add(new SearchCommand(argument, exactSearch));
 					}
 				} else {
 					// The command isn't recognized, throw an exception
 					throw new P2Exception(UNKNOWN_COMMAND_ERROR_PREFIX
-							+ command+getLineNumberMessage());
+							+ command + getLineNumberMessage());
 				}
 			}
 		}
-		
+
 	}
-	private String getLineNumberMessage(){
-		return LINE_NUMBER_MESSAGE_PREFIX + lineNumber + LINE_NUMBER_MESSAGE_SUFFIX;
+
+	private String getLineNumberMessage() {
+		return LINE_NUMBER_MESSAGE_PREFIX + lineNumber
+				+ LINE_NUMBER_MESSAGE_SUFFIX;
 	}
+
 	/**
 	 * @return the commandFilePath
 	 */

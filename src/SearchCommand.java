@@ -18,11 +18,22 @@ public class SearchCommand extends Command {
 	private static final String MATCH_FOUND_PREFIX = "sequence: ";
 	private static final String NODES_VISITED_PREFIX = "# of nodes visisted: ";
 	
-	private int mode = SEARCH_MODE_PREFIX; // Default mode
+	private final int mode; // Default mode
 	private Sequence searchSequence;
 	private int numNodesVisited;
 	private List<Sequence> matches;
-
+	
+	/**
+	 * Creates a search operation where you can specify exact search
+	 * @param sequenceDescriptor
+	 * @param exactSearch
+	 * @throws SequenceException 
+	 */
+	public SearchCommand(String sequenceDescriptor, boolean exactSearch) throws SequenceException{
+		mode = exactSearch ? SEARCH_MODE_EXACT : SEARCH_MODE_PREFIX;
+		searchSequence = createSequence(sequenceDescriptor);
+	}
+	
 	/**
 	 * Creates a default search operation (prefix mode) with the given
 	 * searchDescriptor
@@ -32,6 +43,7 @@ public class SearchCommand extends Command {
 	 */
 	public SearchCommand(String sequenceDescriptor) throws SequenceException {
 		searchSequence = createSequence(sequenceDescriptor);
+		mode = SEARCH_MODE_PREFIX;
 	}
 
 	/**
@@ -99,13 +111,6 @@ public class SearchCommand extends Command {
 	 */
 	public int getMode() {
 		return mode;
-	}
-
-	/**
-	 * @param mode the mode to set
-	 */
-	public void setMode(int mode) {
-		this.mode = mode;
 	}
 
 	/**
