@@ -68,9 +68,9 @@ public class CommandFile {
 	 * 
 	 * @throws SequenceException
 	 * @throws IOException
-	 * @throws P2Exception
+	 * @throws P3Exception
 	 */
-	public void parse() throws SequenceException, IOException, P2Exception {
+	public void parse() throws SequenceException, IOException, P3Exception {
 		commandList = new LinkedList<Command>();
 
 		File commandFile = new File(this.commandFilePath);
@@ -117,7 +117,7 @@ public class CommandFile {
 						// print stats command
 						mode = PrintCommand.PRINT_MODE_STATS;
 					} else {
-						throw new P2Exception(UNKNOWN_PRINT_MODE_ERROR_PREFIX
+						throw new P3Exception(UNKNOWN_PRINT_MODE_ERROR_PREFIX
 								+ argument + getLineNumberMessage());
 					}
 					
@@ -148,7 +148,7 @@ public class CommandFile {
 					}
 				} else {
 					// The command isn't recognized, throw an exception
-					throw new P2Exception(UNKNOWN_COMMAND_ERROR_PREFIX
+					throw new P3Exception(UNKNOWN_COMMAND_ERROR_PREFIX
 							+ command + getLineNumberMessage());
 				}
 			}
