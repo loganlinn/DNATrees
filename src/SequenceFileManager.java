@@ -3,9 +3,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.StringReader;
-import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 /**
  * Manages the file that stores long sequences using first fit approach.
@@ -16,9 +16,9 @@ import java.util.LinkedList;
 public class SequenceFileManager {
 	public static final String FILE_NAME = "biofile.out";
 	private File sequenceFile;
-	private LinkedList<Block> freeBlocks = new LinkedList<Block>();
+	private LinkedList<FreeBlock> freeBlocks = new LinkedList<FreeBlock>();
 	private RandomAccessFile seqAccess;
-	
+
 	public SequenceFileManager() throws IOException {
 		sequenceFile = new File(FILE_NAME);
 		seqAccess = new RandomAccessFile(sequenceFile, "rw");
@@ -34,21 +34,24 @@ public class SequenceFileManager {
 	 */
 	public SequenceFileHandle storeSequence(Sequence sequence) {
 		String sequenceDescriptor = sequence.getSequence();
-		
+
 		int sequenceBlockLength = getEncodedSequenceLength(sequenceDescriptor
 				.length());
 
 		long byteOffset = findFreeBlockOffset(sequenceBlockLength);
 
+//		System.out.println("  storing @ " + byteOffset);
+
 		try {
 
-//			RandomAccessFile raf = new RandomAccessFile(sequenceFile, "rw");
+			// RandomAccessFile raf = new RandomAccessFile(sequenceFile, "rw");
 
 			seqAccess.seek(byteOffset);
 
-			seqAccess.write(encodeString(sequenceDescriptor, sequenceBlockLength));
+			seqAccess.write(encodeString(sequenceDescriptor,
+					sequenceBlockLength));
 
-//			seqAccess.close();
+			// seqAccess.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -59,21 +62,20 @@ public class SequenceFileManager {
 		return new SequenceFileHandle(byteOffset, sequenceDescriptor.length());
 	}
 
-	public String retrieveSequenceDescriptor(SequenceFileHandle handle) {
+	public String retrieveSequence(SequenceFileHandle handle) {
 		int bytesToRead = getEncodedSequenceLength(handle.getSequenceLength());
 		byte[] readData = new byte[bytesToRead];
 
-//		System.out.println(handle);
-		
+		// System.out.println(handle);
+
 		try {
 
-			
 			seqAccess.seek(handle.getSequenceFileOffset());
 
 			seqAccess.read(readData);
 
-//			seqAccess.close();
-			
+			// seqAccess.close();
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -85,13 +87,56 @@ public class SequenceFileManager {
 
 	public void removeSequence(SequenceFileHandle handle) {
 		// POSSIBLE OUTCOMES
-		// 1) Last free block before handle can absorb the size of handle (when block.end == handle.offset)
-		// 		Otherwise, that means there's a block we shouldn't touch between free block and handle
-		// 2) Next free block can expand backwards (when handle.end == block.offset)
-		
+		// 1) Last free block before handle can absorb the size of handle (when
+		// block.end == handle.offset)
+		// Otherwise, that means there's a block we shouldn't touch between free
+		// block and handle
+		// 2) Next free block can expand backwards (when handle.end ==
+		// block.offset)
 		// 3) Both (free blocks before and after can combine)
 		// 4) Handle just becomes a free block
+		// a) no surrounding free blocks
+		// b) first free block
+
+		// fast forward
+
+		int size = getEncodedSequenceLength(handle.getSequenceLength());
+		long offset = handle.getSequenceFileOffset();
+		long end = size + offset;
+//		System.out.println("  Deleting "+offset+"+"+size+"="+end);
 		
+		ListIterator<FreeBlock> blockIt = freeBlocks.listIterator();
+
+		FreeBlock prevBlock = null;
+		FreeBlock nextBlock = null;
+
+		while (blockIt.hasNext()) {
+			FreeBlock currBlock = blockIt.next();
+			
+			if (currBlock.getEnd() == offset) {
+//				System.out.println("    Prev "+currBlock);
+				prevBlock = currBlock;
+			} else if (currBlock.getOffset() == end) {
+//				System.out.println("    Next "+currBlock);
+				nextBlock = currBlock;
+			}
+		}
+
+		if (prevBlock != null && nextBlock != null) {
+//			System.out.println("  Merging blocks");
+			freeBlocks.remove(nextBlock);
+			prevBlock.addToEnd(size + nextBlock.getSize());
+		} else if (prevBlock != null) {
+//			System.out.println("  Adding to end");
+			prevBlock.addToEnd(size);
+		} else if (nextBlock != null) {
+//			System.out.println("  Adding to start");
+			nextBlock.addToFront(size);
+		} else {
+//			System.out.println("  Creating new free block "+offset+"+"+size);
+			freeBlocks.add(new FreeBlock(size, offset));
+		}
+
 	}
 
 	/**
@@ -101,8 +146,8 @@ public class SequenceFileManager {
 	 * @return
 	 */
 	private long findFreeBlockOffset(int blockSize) {
-		Iterator<Block> blockIt = freeBlocks.iterator();
-		Block block = null;
+		Iterator<FreeBlock> blockIt = freeBlocks.iterator();
+		FreeBlock block = null;
 		while (blockIt.hasNext()) {
 			block = blockIt.next();
 			if (block.getSize() == blockSize) {
@@ -113,7 +158,7 @@ public class SequenceFileManager {
 				return block.getOffset();
 			} else if (block.getSize() > blockSize) {
 				long offset = block.getOffset();
-				block.shrink(blockSize);
+				block.takeFromFront(blockSize);
 				return offset;
 			}
 		}
@@ -139,7 +184,7 @@ public class SequenceFileManager {
 	 * 
 	 * @param sequence
 	 */
-	private static int getEncodedSequenceLength(int sequenceLength) {
+	public static int getEncodedSequenceLength(int sequenceLength) {
 		return ((sequenceLength & 0x3) != 0 ? 1 : 0) + (sequenceLength >> 2);
 	}
 
@@ -153,6 +198,14 @@ public class SequenceFileManager {
 		return encodeString(sequence,
 				getEncodedSequenceLength(sequence.length()));
 	}
+
+	/**
+	 * Encodes a sequence 4 characters to byte
+	 * 
+	 * @param sequence
+	 * @param numBytes
+	 * @return
+	 */
 	private static byte[] encodeString(String sequence, int numBytes) {
 
 		byte[] output = new byte[numBytes];
@@ -191,15 +244,16 @@ public class SequenceFileManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		System.out.print("    Encoded "+sequence+" to ");
-//		for(byte b : output){
-//			System.out.print(Integer.toHexString(b)+" ");
-//		}
-//		System.out.println("");
+		// System.out.print("    Encoded "+sequence+" to ");
+		// for(byte b : output){
+		// System.out.print(Integer.toHexString(b)+" ");
+		// }
+		// System.out.println("");
 		return output;
 	}
-	
+
 	/**
+	 * Decodes 1 byte to 4 sequence characters
 	 * 
 	 * @param data
 	 * @param length
@@ -207,15 +261,15 @@ public class SequenceFileManager {
 	 */
 	public static String decode(byte[] data, int length) {
 		StringBuilder sb = new StringBuilder();
-		if(getEncodedSequenceLength(length) > data.length){
+		if (getEncodedSequenceLength(length) > data.length) {
 			System.err.println("length does not match data");
 			return null;
 		}
 		int byteInd = 0, charsDecoded = 0;
-		while(charsDecoded < length){
+		while (charsDecoded < length) {
 			byte b = data[byteInd];
-			for(int i = 0; i < 4; i++){
-				switch(b & 0x3){
+			for (int i = 0; i < 4; i++) {
+				switch (b & 0x3) {
 				case 0x0:
 					sb.append('A');
 					break;
@@ -229,24 +283,26 @@ public class SequenceFileManager {
 					sb.append('T');
 					break;
 				}
-				if(++charsDecoded >= length) break;
+				if (++charsDecoded >= length)
+					break;
 				b >>= 2;
 			}
 			byteInd++;
 		}
 		return sb.toString();
 	}
-	
+
 	/**
+	 * Represents a free area in the file
 	 * 
 	 * @author loganlinn
 	 * 
 	 */
-	private class Block {
+	private class FreeBlock {
 		private int size; // block size in bytes
 		private long offset; // location in file
 
-		public Block(int size, long offset) {
+		public FreeBlock(int size, long offset) {
 			super();
 			this.size = size;
 			this.offset = offset;
@@ -266,13 +322,32 @@ public class SequenceFileManager {
 			return offset;
 		}
 
-		public void shrink(int blockSize) {
-			offset += blockSize;
-			size -= blockSize;
-		}
-
 		public long getEnd() {
 			return offset + size;
+		}
+
+		public void addToEnd(int step) {
+			size += step;
+		}
+
+		public void addToFront(int step) {
+			size += step;
+			offset -= step;
+		}
+
+		public void takeFromFront(int step) {
+			size -= step;
+			offset += step;
+		}
+
+		public String toString() {
+			return "Free: " + offset + "+" + size;
+		}
+	}
+	
+	public void printFreeBlocks(){
+		for(FreeBlock fb : freeBlocks){
+			System.out.println("  "+fb.toString());
 		}
 	}
 }
