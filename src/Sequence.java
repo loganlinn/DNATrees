@@ -158,7 +158,7 @@ public class Sequence {
 	}
 
 	public String getSequence() {
-		return characters.toString();
+		return new String(characters);
 	}
 
 	/**

@@ -1,13 +1,13 @@
-
 /**
  * Represents a location in the sequence file for a particular sequence
+ * 
  * @author loganlinn
- *
+ * 
  */
 public class SequenceFileHandle {
 	private final int sequenceLength;
 	private final long sequenceFileOffset;
-	
+
 	/**
 	 * 
 	 * @param sequenceLength
@@ -32,6 +32,8 @@ public class SequenceFileHandle {
 	public long getSequenceFileOffset() {
 		return sequenceFileOffset;
 	}
-	
-	
+
+	public String toString() {
+		return "Handle: " + sequenceFileOffset + "+" + sequenceLength;
+	}
 }
