@@ -94,7 +94,7 @@ public class CommandFile {
 					 * Insert command
 					 */
 					argument = getNextArgument(lineTokens);//sequenceId
-					length = getNextIntArgument(lineTokens);//length
+					//length = getNextIntArgument(lineTokens);//length
 //					commandList.add(new InsertCommand(argument, length));
 					tree.insert(new SavedSequence(argument, memoryManager.storeSequence(br.readLine())));
 				} else if (REMOVE_COMMAND.equals(command)) {
@@ -103,13 +103,13 @@ public class CommandFile {
 					 */
 					argument = getNextArgument(lineTokens);
 //					commandList.add(new RemoveCommand(argument));
+					tree.remove(new SavedSequence(argument, memoryManager.storeSequence(br.readLine())));
 				} else if (PRINT_COMMAND.equals(command)) {
 					/*
 					 * Print command
 					 */
-
 //					commandList.add(new PrintCommand());
-
+					tree.print();
 				} else if (SEARCH_COMMAND.equals(command)) {
 					/*
 					 * Search command, find the mode
@@ -119,6 +119,7 @@ public class CommandFile {
 															// descriptor
 					if (argument != null) {
 //						commandList.add(new SearchCommand(argument));
+						tree.search(new SearchCommand(argument));
 					} else {
 						throw new P3Exception(SEARCH_COMMAND
 								+ " missing argument." + getLineNumberMessage());
