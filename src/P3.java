@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.io.PrintStream;
 
 /**
  * === CS3114 Project 3 ===
@@ -76,7 +75,6 @@ import java.io.PrintStream;
 public class P3 {
 	/* Message for output to display appropriate usage */
 	private static final String PROGRAM_USAGE_MESSAGE = "usage: P3 <command-file>";
-	private static final String PRINT_INDENT = "  ";
 	public static MemoryManager memoryManager;
 	/**
 	 * On my honor:

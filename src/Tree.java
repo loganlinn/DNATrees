@@ -1,7 +1,5 @@
-import java.util.LinkedList;
-import java.util.Queue;
-
 /**
+ * Represents the root of our DNA tree
  * 
  * @author loganlinn
  * 

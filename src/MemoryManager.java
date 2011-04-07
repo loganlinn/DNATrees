@@ -99,17 +99,6 @@ public class MemoryManager {
 	}
 
 	/**
-	 * Encodes a string into a byte array
-	 * 
-	 * @param sequence
-	 * @return
-	 */
-	private static byte[] encodeString(String sequence) {
-		return encodeString(sequence,
-				getEncodedSequenceLength(sequence.length()));
-	}
-
-	/**
 	 * Encodes a sequence 4 characters to byte
 	 * 
 	 * @param sequence
@@ -122,7 +111,7 @@ public class MemoryManager {
 		StringReader reader = new StringReader(sequence);
 		char[] buffer = new char[4];
 		int charsRead, bytesEncoded = 0;
-		byte currentByte, encodedValue = 0x0;
+		byte encodedValue = 0x0;
 		try {
 			while ((charsRead = reader.read(buffer)) != -1) {
 

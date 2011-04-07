@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
@@ -23,9 +20,7 @@ public class CommandFile {
 	private static final String REMOVE_COMMAND = "remove";
 	private static final String PRINT_COMMAND = "print";
 	private static final String SEARCH_COMMAND = "search";
-	private static final String NO_INSERT_COMMAND_FOUND_ERROR = "Command file must contain an insert command";
 	private static final String UNKNOWN_COMMAND_ERROR_PREFIX = "Unknown command, ";
-	private static final String UNKNOWN_PRINT_MODE_ERROR_PREFIX = "Unknown print mode, ";
 	private static final String LINE_NUMBER_MESSAGE_PREFIX = "(Line ";
 	private static final String LINE_NUMBER_MESSAGE_SUFFIX = ")";
 
@@ -56,6 +51,12 @@ public class CommandFile {
 		return null;
 	}
 
+	/**
+	 * Returns the next token in the string token, and parses it as an int
+	 * @param tokenizer
+	 * @return
+	 * @throws NumberFormatException
+	 */
 	private int getNextIntArgument(StringTokenizer tokenizer)
 			throws NumberFormatException {
 		if (tokenizer.hasMoreTokens()) {
@@ -77,13 +78,11 @@ public class CommandFile {
 			throws IOException, P3Exception {
 
 		File commandFile = new File(this.commandFilePath);
-		FileInputStream fileStream;
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new DataInputStream(new FileInputStream(commandFile))));
 		String line, command, argument = null;
 		int length;
-		boolean commandHasArgument;
 		while ((line = br.readLine()) != null) {
 			lineNumber++;
 			StringTokenizer lineTokens = new StringTokenizer(line);
