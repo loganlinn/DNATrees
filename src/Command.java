@@ -28,14 +28,14 @@ public abstract class Command {
 	 * @return
 	 * @throws SequenceException 
 	 */
-	protected static Sequence createSequence(String sequenceDescriptor) throws SequenceException{
+	protected static StoredSequence createSequence(String sequenceDescriptor) throws SequenceException{
 		if(sequenceDescriptor == null){
 			throw new SequenceException(sequenceDescriptor);
-		}else if(!sequenceDescriptor.matches(Sequence.RE_ALPHABET)){
+		}else if(!sequenceDescriptor.matches(StoredSequence.RE_ALPHABET)){
 			throw new SequenceException(sequenceDescriptor);
 		}
 		//TODO: regular expression the sequence descriptor for valid alpahbet
-		return new Sequence(sequenceDescriptor, null);
+		return new StoredSequence(sequenceDescriptor, null);
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public abstract class Command {
 	 * 
 	 * @param sequence
 	 */
-	public static void invalidSequence(Sequence sequence) {
+	public static void invalidSequence(StoredSequence sequence) {
 		out.println("ERROR: Invaid sequence, \""+sequence.toString()+"\".");
 	}
 

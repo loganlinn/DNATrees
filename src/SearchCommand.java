@@ -19,9 +19,9 @@ public class SearchCommand extends Command {
 	private static final String NODES_VISITED_PREFIX = "# of nodes visisted: ";
 	
 	private final SearchMode mode; // Default mode
-	private Sequence searchSequence;
+	private StoredSequence searchSequence;
 	private int numNodesVisited;
-	private List<Sequence> matches;
+	private List<StoredSequence> matches;
 	
 	
 	/**
@@ -60,7 +60,7 @@ public class SearchCommand extends Command {
 	public Node execute(Node root) {
 		// Instantiate the members to record search progress prior to execution
 		numNodesVisited = 0;
-		matches = new LinkedList<Sequence>();
+		matches = new LinkedList<StoredSequence>();
 		// Call the search method on the root node, passing this
 		root.search(this);
 		// Report the results
@@ -83,7 +83,7 @@ public class SearchCommand extends Command {
 	 * 
 	 * @param matchedSequence
 	 */
-	public void matchFound(Sequence matchedSequence){
+	public void matchFound(StoredSequence matchedSequence){
 		this.matches.add(matchedSequence);
 	}
 	
@@ -107,7 +107,7 @@ public class SearchCommand extends Command {
 			out.println(EMPTY_MATCHES_MESSAGE);
 		}else{
 			// Else, print out all of the matches
-			for(Sequence matchedSequence : matches){
+			for(StoredSequence matchedSequence : matches){
 				out.println(MATCH_FOUND_PREFIX+matchedSequence.toString());
 			}
 		}
@@ -124,14 +124,14 @@ public class SearchCommand extends Command {
 	/**
 	 * @return the searchSequence
 	 */
-	public Sequence getSearchSequence() {
+	public StoredSequence getSearchSequence() {
 		return searchSequence;
 	}
 
 	/**
 	 * @param searchSequence the searchSequence to set
 	 */
-	public void setSearchSequence(Sequence searchSequence) {
+	public void setSearchSequence(StoredSequence searchSequence) {
 		this.searchSequence = searchSequence;
 	}
 
@@ -152,14 +152,14 @@ public class SearchCommand extends Command {
 	/**
 	 * @return the matches
 	 */
-	public List<Sequence> getMatches() {
+	public List<StoredSequence> getMatches() {
 		return matches;
 	}
 
 	/**
 	 * @param matches the matches to set
 	 */
-	public void setMatches(List<Sequence> matches) {
+	public void setMatches(List<StoredSequence> matches) {
 		this.matches = matches;
 	}
 }

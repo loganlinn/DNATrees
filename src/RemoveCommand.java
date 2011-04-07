@@ -4,7 +4,7 @@
  *
  */
 public class RemoveCommand extends Command {
-	private Sequence sequence;
+	private StoredSequence sequence;
 	
 	/**
 	 * Construct a RemoveOperation given a sequenceDescriptor

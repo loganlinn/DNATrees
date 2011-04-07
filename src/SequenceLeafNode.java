@@ -7,7 +7,7 @@
  * This is the class that creates the leaf node which contains a sequnce that has been added to the DNA Tree.
  */
 public class SequenceLeafNode implements Node {
-	private Sequence sequence; // Sequence data contained in this node
+	private StoredSequence sequence; // Sequence data contained in this node
 	private SequenceFileHandle fileHandle; // References where the sequence is stored
 	
 	/**
@@ -15,7 +15,7 @@ public class SequenceLeafNode implements Node {
 	 * 
 	 * @param sequence
 	 */
-	public SequenceLeafNode(Sequence sequence) {
+	public SequenceLeafNode(StoredSequence sequence) {
 		this.sequence = sequence;
 	}
 
@@ -43,7 +43,7 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node insert(Sequence sequence) {
+	public Node insert(StoredSequence sequence) {
 		// At least one of the sequences should have more characters.
 		// If they don't that indicates a duplicate. We could also compare
 		// sequences here
@@ -65,7 +65,7 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node remove(Sequence sequence) {
+	public Node remove(StoredSequence sequence) {
 		// Verify this is a matching sequence
 		if (this.sequence.equals(sequence)) {
 			return EmptyLeafNode.getInstance();
@@ -94,7 +94,7 @@ public class SequenceLeafNode implements Node {
 	/**
 	 * @return the sequence
 	 */
-	public Sequence getSequence() {
+	public StoredSequence getSequence() {
 		return sequence;
 	}
 
@@ -102,7 +102,7 @@ public class SequenceLeafNode implements Node {
 	 * @param sequence
 	 *            the sequence to set
 	 */
-	public void setSequence(Sequence sequence) {
+	public void setSequence(StoredSequence sequence) {
 		this.sequence = sequence;
 	}
 	/**

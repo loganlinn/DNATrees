@@ -6,7 +6,7 @@
  * 
  */
 public class InsertCommand extends Command {
-	private Sequence sequence;
+	private StoredSequence sequence;
 	private int length;
 	
 	/**
@@ -36,7 +36,7 @@ public class InsertCommand extends Command {
 	 * 
 	 * @param sequence
 	 */
-	public static void duplicateSequenceError(Sequence sequence) {
+	public static void duplicateSequenceError(StoredSequence sequence) {
 		out.println("ERROR: Sequence, \"" + sequence.toString()
 				+ "\" already exists in DNA Tree.");
 	}
@@ -44,7 +44,7 @@ public class InsertCommand extends Command {
 	/**
 	 * @return the sequence
 	 */
-	public Sequence getSequence() {
+	public StoredSequence getSequence() {
 		return sequence;
 	}
 
@@ -52,7 +52,7 @@ public class InsertCommand extends Command {
 	 * @param sequence
 	 *            the sequence to set
 	 */
-	public void setSequence(Sequence sequence) {
+	public void setSequence(StoredSequence sequence) {
 		this.sequence = sequence;
 	}
 

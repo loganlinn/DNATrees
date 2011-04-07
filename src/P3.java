@@ -172,7 +172,7 @@ public class P3 {
 	 * Output a message when a sequence is not found when trying to remove
 	 * @param sequence
 	 */
-	public static void sequenceNotFound(Sequence sequence){
+	public static void sequenceNotFound(StoredSequence sequence){
 		System.out.println("Could not find sequence, \""+sequence+"\", to remove.");
 	}
 }

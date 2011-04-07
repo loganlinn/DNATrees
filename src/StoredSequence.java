@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
  * @author loganlinn
  * 
  */
-public class Sequence {
+public class StoredSequence {
 	public static final char[] ALPHABET = {'A','C','G','T'};
 	public static final String RE_ALPHABET = "[ACGT]+"; //regex needed for checking the parsed in data from the command file.
 	private int position = 0; // Stores the index of the next unseen character
@@ -24,7 +24,7 @@ public class Sequence {
 	 * 
 	 * @param sequenceCharacters
 	 */
-	public Sequence(String sequenceId, SequenceFileHandle fileHandle) {
+	public StoredSequence(String sequenceId, SequenceFileHandle fileHandle) {
 		characters = sequenceId.toCharArray();
 		this.fileHandle = fileHandle;
 	}
@@ -34,7 +34,7 @@ public class Sequence {
 	 */
 	public String stats() {
 
-		char[] alphabet = Sequence.ALPHABET;
+		char[] alphabet = StoredSequence.ALPHABET;
 		double[] averages = new double[alphabet.length]; // we can assume values
 															// are initialized
 															// to 0
@@ -138,8 +138,8 @@ public class Sequence {
 	 * Compare with another Sequence
 	 */
 	public boolean equals(Object obj) {
-		if (obj instanceof Sequence) {
-			return (this.toString().equals(((Sequence) obj).toString()));
+		if (obj instanceof StoredSequence) {
+			return (this.toString().equals(((StoredSequence) obj).toString()));
 		}
 		return super.equals(obj);
 	}
@@ -170,7 +170,7 @@ public class Sequence {
 		return characters;
 	}
 
-	public boolean isPrefixOf(Sequence otherSequence) {
+	public boolean isPrefixOf(StoredSequence otherSequence) {
 		return otherSequence.toString().startsWith(new String(characters));
 	}
 

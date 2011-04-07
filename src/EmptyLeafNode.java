@@ -47,7 +47,7 @@ public class EmptyLeafNode implements Node {
 	 * @return the new SequenceNode that will replace this Node in the tree
 	 */
 	@Override
-	public Node insert(Sequence sequence) {
+	public Node insert(StoredSequence sequence) {
 		return new SequenceLeafNode(sequence);
 	}
 
@@ -58,7 +58,7 @@ public class EmptyLeafNode implements Node {
 	 * @return the same EmptyLeafNode to not alter the tree structure.
 	 */
 	@Override
-	public Node remove(Sequence sequence) {
+	public Node remove(StoredSequence sequence) {
 		P3.sequenceNotFound(sequence);
 		return this;
 	}

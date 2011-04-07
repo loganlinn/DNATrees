@@ -34,11 +34,11 @@ public class Tree {
 		}
 	}
 	
-	public void insert(Sequence storedSequence){
+	public void insert(StoredSequence storedSequence){
 		root = root.insert(storedSequence);
 	}
 	
-	public void remove(Sequence storedSequence){
+	public void remove(StoredSequence storedSequence){
 		root = root.remove(storedSequence);
 	}
 	
