@@ -1,7 +1,7 @@
 import java.io.IOException;
 
 public class SequenceFileManagerTest {
-	static SequenceFileManager sfm;
+	static MemoryManager sfm;
 
 	public static void main(String[] args) {
 		String[] s = new String[]{
@@ -11,7 +11,7 @@ public class SequenceFileManagerTest {
 				"CCCC"
 		};
 		try {
-			sfm = new SequenceFileManager();
+			sfm = new MemoryManager();
 
 			SequenceFileHandle fh0 = store(s[0]);
 //			SequenceFileHandle fh1 = store(s[1]);

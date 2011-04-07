@@ -21,7 +21,7 @@ public class FirstFitList {
 
 		// fast forward
 
-		int size = SequenceFileManager.getEncodedSequenceLength(handle.getSequenceLength());
+		int size = MemoryManager.getEncodedSequenceLength(handle.getSequenceLength());
 		long offset = handle.getSequenceFileOffset();
 		long end = size + offset;
 //		System.out.println("  Deleting "+offset+"+"+size+"="+end);

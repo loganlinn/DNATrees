@@ -12,44 +12,49 @@ import java.util.List;
  * 
  */
 public class SearchCommand {
-	public static enum SearchMode { EXACT, PREFIX }
+	public static enum SearchMode {
+		EXACT, PREFIX
+	}
+
 	public static final String SEARCH_EXACT_SUFFIX = "$";
 	private static final String EMPTY_MATCHES_MESSAGE = "no sequence founds";
 	private static final String MATCH_FOUND_PREFIX = "sequence: ";
 	private static final String NODES_VISITED_PREFIX = "# of nodes visisted: ";
-	
+
 	private final SearchMode mode; // Default mode
 	private Sequence searchSequence;
 	private int numNodesVisited;
 	private List<Sequence> matches;
-	
-	
+
 	/**
 	 * Creates a search operation where you can specify exact search
+	 * 
 	 * @param sequenceDescriptor
 	 * @param exactSearch
-	 * @throws SequenceException 
+	 * @throws SequenceException
 	 */
-	public SearchCommand(String sequenceDescriptor, boolean exactSearch) throws SequenceException{
+	public SearchCommand(String sequenceDescriptor, boolean exactSearch) {
 		mode = exactSearch ? SearchMode.EXACT : SearchMode.PREFIX;
 		searchSequence = new Sequence(sequenceDescriptor);
 	}
-	
+
 	/**
 	 * Creates a default search operation (prefix mode) with the given
 	 * searchDescriptor
 	 * 
 	 * @param sequenceDescriptor
-	 * @throws SequenceException 
+	 * @throws SequenceException
 	 */
-	public SearchCommand(String sequenceDescriptor) throws SequenceException {
-		if(sequenceDescriptor.endsWith(SEARCH_EXACT_SUFFIX)){
+	public SearchCommand(String sequenceDescriptor) {
+		if (sequenceDescriptor.endsWith(SEARCH_EXACT_SUFFIX)) {
 			mode = SearchMode.EXACT;
-			sequenceDescriptor = sequenceDescriptor.substring(0, sequenceDescriptor.length()-SEARCH_EXACT_SUFFIX.length()-1);
-		}else{
+			sequenceDescriptor = sequenceDescriptor.substring(0,
+					sequenceDescriptor.length() - SEARCH_EXACT_SUFFIX.length()
+							- 1);
+		} else {
 			mode = SearchMode.PREFIX;
 		}
-		
+
 		searchSequence = new Sequence(sequenceDescriptor);
 	}
 
@@ -64,53 +69,59 @@ public class SearchCommand {
 		root.search(this);
 		// Report the results
 		reportResults();
-		System.out.println();	// print an empty line for readability
-		// Search operation doesn't change tree structure -> return the root back to itself
+		System.out.println(); // print an empty line for readability
+		// Search operation doesn't change tree structure -> return the root
+		// back to itself
 		return root;
 	}
-	
+
 	/**
-	 * Convenience method to directly increment the number of nodes visited by 1.
-	 * This is called when the search visists a new node in the tree 
+	 * Convenience method to directly increment the number of nodes visited by
+	 * 1. This is called when the search visists a new node in the tree
 	 */
-	public void incrementNodesVisited(){
+	public void incrementNodesVisited() {
 		this.numNodesVisited++;
 	}
-	
+
 	/**
-	 * Convenience method to directly add a sequence to the list of found sequences
+	 * Convenience method to directly add a sequence to the list of found
+	 * sequences
 	 * 
 	 * @param matchedSequence
 	 */
-	public void matchFound(Sequence matchedSequence){
+	public void matchFound(Sequence matchedSequence) {
 		this.matches.add(matchedSequence);
 	}
-	
+
 	/**
-	 * Returns if this search operation needs to match the searchSequence exactly
+	 * Returns if this search operation needs to match the searchSequence
+	 * exactly
+	 * 
 	 * @return
 	 */
-	public boolean matchExact(){
+	public boolean matchExact() {
 		return (mode == SearchMode.EXACT);
 	}
-	
+
 	/**
-	 * Outputs results for this search command
-	 * Called when the search has completed
+	 * Outputs results for this search command Called when the search has
+	 * completed
 	 */
-	public void reportResults(){
-		System.out.println("Search "+searchSequence.toString()+" ["+mode.toString()+"]");
-		System.out.println(NODES_VISITED_PREFIX+this.numNodesVisited);
-		if(matches.isEmpty()){
+	public void reportResults() {
+		System.out.println("Search " + searchSequence.toString() + " ["
+				+ mode.toString() + "]");
+		System.out.println(NODES_VISITED_PREFIX + this.numNodesVisited);
+		if (matches.isEmpty()) {
 			// Print a message if we don't have any matches
 			System.out.println(EMPTY_MATCHES_MESSAGE);
-		}else{
+		} else {
 			// Else, print out all of the matches
-			for(Sequence matchedSequence : matches){
-				System.out.println(MATCH_FOUND_PREFIX+matchedSequence.toString());
+			for (Sequence matchedSequence : matches) {
+				System.out.println(MATCH_FOUND_PREFIX
+						+ matchedSequence.toString());
 			}
 		}
-		
+
 	}
 
 	/**
@@ -128,7 +139,8 @@ public class SearchCommand {
 	}
 
 	/**
-	 * @param searchSequence the searchSequence to set
+	 * @param searchSequence
+	 *            the searchSequence to set
 	 */
 	public void setSearchSequence(Sequence searchSequence) {
 		this.searchSequence = searchSequence;
@@ -142,7 +154,8 @@ public class SearchCommand {
 	}
 
 	/**
-	 * @param numNodesVisited the nodesVisited to set
+	 * @param numNodesVisited
+	 *            the nodesVisited to set
 	 */
 	public void setNumNodesVisited(int nodesVisited) {
 		this.numNodesVisited = nodesVisited;
@@ -156,7 +169,8 @@ public class SearchCommand {
 	}
 
 	/**
-	 * @param matches the matches to set
+	 * @param matches
+	 *            the matches to set
 	 */
 	public void setMatches(List<Sequence> matches) {
 		this.matches = matches;

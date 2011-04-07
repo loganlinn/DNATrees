@@ -139,12 +139,9 @@ public class P3 {
 		 * Attempt to parse the command file, catching any errors
 		 */
 		try {
-			SequenceFileManager sequenceManager = new SequenceFileManager();
+			MemoryManager sequenceManager = new MemoryManager();
 			commandFile.parse(dnaTree);
 			sequenceManager.close();
-		} catch (SequenceException e) {
-			System.out.println(e.getMessage());
-			return;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;

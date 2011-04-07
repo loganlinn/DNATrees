@@ -73,7 +73,7 @@ public class CommandFile {
 	 * @throws IOException
 	 * @throws P3Exception
 	 */
-	public void parse(Tree tree) throws SequenceException, IOException, P3Exception {
+	public void parse(Tree tree) throws IOException, P3Exception {
 
 		File commandFile = new File(this.commandFilePath);
 		FileInputStream fileStream;
@@ -120,7 +120,7 @@ public class CommandFile {
 					if (argument != null) {
 //						commandList.add(new SearchCommand(argument));
 					} else {
-						throw new SequenceException(SEARCH_COMMAND
+						throw new P3Exception(SEARCH_COMMAND
 								+ " missing argument." + getLineNumberMessage());
 					}
 				} else {

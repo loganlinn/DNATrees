@@ -35,6 +35,6 @@ public class SequenceFileHandle {
 
 	public String toString() {
 		return "Handle: " + sequenceFileOffset + "+"
-				+ SequenceFileManager.getEncodedSequenceLength(sequenceLength);
+				+ MemoryManager.getEncodedSequenceLength(sequenceLength);
 	}
 }

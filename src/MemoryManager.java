@@ -13,13 +13,17 @@ import java.util.ListIterator;
  * @author loganlinn
  * 
  */
-public class SequenceFileManager {
+public class MemoryManager {
 	public static final String FILE_NAME = "biofile.out";
 	private File sequenceFile;
 	private RandomAccessFile seqAccess;
 	private FirstFitList firstFit = new FirstFitList();
 
-	public SequenceFileManager() throws IOException {
+	/**
+	 * Creates the manager
+	 * @throws IOException
+	 */
+	public MemoryManager() throws IOException {
 		sequenceFile = new File(FILE_NAME);
 		seqAccess = new RandomAccessFile(sequenceFile, "rw");
 		seqAccess.setLength(0); // clear out the file
@@ -69,7 +73,6 @@ public class SequenceFileManager {
 		int bytesToRead = getEncodedSequenceLength(handle.getSequenceLength());
 		byte[] sequenceBuffer = new byte[bytesToRead]; // Create a buffer to
 														// store the sequence
-
 		try {
 
 			seqAccess.seek(handle.getSequenceFileOffset());
@@ -199,9 +202,17 @@ public class SequenceFileManager {
 		return sb.toString();
 	}
 
+	/**
+	 * Closes the random access file
+	 * @throws IOException
+	 */
 	public void close() throws IOException {
 		seqAccess.close();
 	}
+	
+	/**
+	 * A wrapper method for printing our free block
+	 */
 	public void printFreeBlocks(){
 		firstFit.printFreeBlocks();
 	}
