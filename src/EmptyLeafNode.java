@@ -46,7 +46,7 @@ public class EmptyLeafNode implements Node {
 	 */
 	@Override
 	public Node insert(SavedSequence sequence) {
-		return new SequenceLeafNode(sequence);
+		return new LeafNode(sequence);
 	}
 
 	/**

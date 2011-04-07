@@ -33,7 +33,7 @@ public class InternalNode implements Node {
 	 * @param existingSequence
 	 * @param newSequence
 	 */
-	public InternalNode(SequenceLeafNode existingSequenceNode,
+	public InternalNode(LeafNode existingSequenceNode,
 			SavedSequence newSequence) {
 		/*
 		 * Fill child to be empty leaf nodes by setting them to flyweight
@@ -130,17 +130,17 @@ public class InternalNode implements Node {
 			 * is empty and no other child exist: take prefix ---- then we must,
 			 * expand
 			 */
-			if (($ instanceof SequenceLeafNode)
-					&& ((SequenceLeafNode) $).getSequence().length() > sequence
+			if (($ instanceof LeafNode)
+					&& ((LeafNode) $).getSequence().length() > sequence
 							.length()
 					&& sequence
-							.isPrefixOf(((SequenceLeafNode) $).getSequence())) {
+							.isPrefixOf(((LeafNode) $).getSequence())) {
 				// Swap with prefix
 				insert(swapPrefix(sequence));
 			} else if ( /* Check if we have a prefix */
 			!sequence.hasNext() // Check again (after getting sequenceChar) if
 								// sequence has more characters
-					&& (child instanceof SequenceLeafNode) // Make sure child
+					&& (child instanceof LeafNode) // Make sure child
 															// isn't empty
 					&& (numNonEmptyLeafChildren() < MIN_NON_EMPTY_LEAF_CHILDREN) // doesn't
 																					// has
@@ -178,8 +178,8 @@ public class InternalNode implements Node {
 	 * @return
 	 */
 	private SavedSequence swapPrefix(SavedSequence newPrefixSequence) {
-		SavedSequence oldPrefix = ((SequenceLeafNode) $).getSequence();
-		((SequenceLeafNode) $).setSequence(newPrefixSequence);
+		SavedSequence oldPrefix = ((LeafNode) $).getSequence();
+		((LeafNode) $).setSequence(newPrefixSequence);
 		return oldPrefix;
 	}
 
@@ -192,7 +192,7 @@ public class InternalNode implements Node {
 		// Ensure that the prefix is empty
 		if ($ instanceof EmptyLeafNode) {
 			$ = $.insert(sequence);
-		} else if (sequence.equals(((SequenceLeafNode) $).getSequence())) {
+		} else if (sequence.equals(((LeafNode) $).getSequence())) {
 			/*
 			 * Prefix isn't empty. Assert that we do not have duplicate
 			 * sequences.
@@ -247,7 +247,7 @@ public class InternalNode implements Node {
 			// We cannot collapse if a child is an InternalNode
 			if (child instanceof InternalNode) {
 				return this;
-			} else if (child instanceof SequenceLeafNode) {
+			} else if (child instanceof LeafNode) {
 				// If we find more than 1 SequenceLeafNode, we can't collapse
 				if (collapsible == null) {
 					collapsible = child;
@@ -262,7 +262,7 @@ public class InternalNode implements Node {
 		 * SequenceLeafNode Move the pointer in the sequence back so comparisons
 		 * are made at the correct character
 		 */
-		((SequenceLeafNode) collapsible).getSequence().prev();
+		((LeafNode) collapsible).getSequence().prev();
 		return collapsible;
 	}
 
@@ -347,16 +347,16 @@ public class InternalNode implements Node {
 	 */
 	private int numNonEmptyLeafChildren() {
 		int nonEmptyChildren = 0;
-		if (A instanceof SequenceLeafNode) {
+		if (A instanceof LeafNode) {
 			nonEmptyChildren++;
 		}
-		if (C instanceof SequenceLeafNode) {
+		if (C instanceof LeafNode) {
 			nonEmptyChildren++;
 		}
-		if (G instanceof SequenceLeafNode) {
+		if (G instanceof LeafNode) {
 			nonEmptyChildren++;
 		}
-		if (T instanceof SequenceLeafNode) {
+		if (T instanceof LeafNode) {
 			nonEmptyChildren++;
 		}
 

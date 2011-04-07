@@ -1,15 +1,15 @@
 
 public class SavedSequence extends Sequence {
-	private final SequenceFileHandle fileHandle;
+	private final MemoryHandle fileHandle;
 	
-	public SavedSequence(String sequenceId, SequenceFileHandle fileHandle) {
+	public SavedSequence(String sequenceId, MemoryHandle fileHandle) {
 		super(sequenceId);
 		this.fileHandle = fileHandle;
 	}
 	/**
 	 * @return the fileHandle
 	 */
-	public SequenceFileHandle getFileHandle() {
+	public MemoryHandle getFileHandle() {
 		return fileHandle;
 	}
 

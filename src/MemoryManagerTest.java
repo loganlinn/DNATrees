@@ -13,10 +13,10 @@ public class MemoryManagerTest {
 		try {
 			sfm = new MemoryManager();
 
-			SequenceFileHandle fh0 = store(s[0]);
+			MemoryHandle fh0 = store(s[0]);
 //			SequenceFileHandle fh1 = store(s[1]);
-			SequenceFileHandle fh2 = store(s[2]);
-			SequenceFileHandle fh3 = store(s[3]);
+			MemoryHandle fh2 = store(s[2]);
+			MemoryHandle fh3 = store(s[3]);
 			
 			remove(fh0);
 			
@@ -39,17 +39,17 @@ public class MemoryManagerTest {
 		}
 
 	}
-	public static void remove(SequenceFileHandle fh){
+	public static void remove(MemoryHandle fh){
 		System.out.println("Removing: "+fh.toString());
 		sfm.removeSequence(fh);
 	}
 	
-	public static SequenceFileHandle store(String seq){
+	public static MemoryHandle store(String seq){
 		System.out.println("Storing: " + seq);
 		return sfm.storeSequence(seq);
 	}
 	
-	public static void retrieve(SequenceFileHandle fh){
+	public static void retrieve(MemoryHandle fh){
 		String seq = sfm.retrieveSequence(fh);
 		System.out.print("Recieved: ");
 		byte[] data = seq.getBytes();

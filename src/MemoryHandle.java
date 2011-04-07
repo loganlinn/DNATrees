@@ -4,7 +4,7 @@
  * @author loganlinn
  * 
  */
-public class SequenceFileHandle {
+public class MemoryHandle {
 	private final int sequenceLength;
 	private final long sequenceFileOffset;
 
@@ -13,7 +13,7 @@ public class SequenceFileHandle {
 	 * @param sequenceLength
 	 * @param sequenceFileOffset
 	 */
-	public SequenceFileHandle(long sequenceFileOffset, int sequenceLength) {
+	public MemoryHandle(long sequenceFileOffset, int sequenceLength) {
 		super();
 		this.sequenceLength = sequenceLength;
 		this.sequenceFileOffset = sequenceFileOffset;

@@ -7,7 +7,7 @@
  *         the class that creates the leaf node which contains a sequnce that
  *         has been added to the DNA Tree.
  */
-public class SequenceLeafNode implements Node {
+public class LeafNode implements Node {
 	private SavedSequence savedSequence; // Sequence data contained in this node
 
 	/**
@@ -15,7 +15,7 @@ public class SequenceLeafNode implements Node {
 	 * 
 	 * @param sequence
 	 */
-	public SequenceLeafNode(SavedSequence sequence) {
+	public LeafNode(SavedSequence sequence) {
 		this.savedSequence = sequence;
 	}
 
@@ -25,7 +25,7 @@ public class SequenceLeafNode implements Node {
 	 */
 	@Override
 	public void print() {
-		System.out.println(savedSequence.toString() + " stored at "+savedSequence.getFileHandle());
+		System.out.println(savedSequence.toString() + " ["+savedSequence.getFileHandle()+"]");
 	}
 
 	/**

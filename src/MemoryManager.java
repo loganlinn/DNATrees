@@ -37,7 +37,7 @@ public class MemoryManager {
 	 * @param sequence
 	 * @return
 	 */
-	public SequenceFileHandle storeSequence(String sequenceDescriptor) {
+	public MemoryHandle storeSequence(String sequenceDescriptor) {
 		int sequenceBlockLength = getEncodedSequenceLength(sequenceDescriptor
 				.length());
 
@@ -61,15 +61,15 @@ public class MemoryManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new SequenceFileHandle(byteOffset, sequenceDescriptor.length());
+		return new MemoryHandle(byteOffset, sequenceDescriptor.length());
 	}
 
-	public String removeSequence(SequenceFileHandle handle) {
+	public String removeSequence(MemoryHandle handle) {
 		firstFit.releaseBlock(handle);
 		return retrieveSequence(handle);
 	}
 
-	public String retrieveSequence(SequenceFileHandle handle) {
+	public String retrieveSequence(MemoryHandle handle) {
 		int bytesToRead = getEncodedSequenceLength(handle.getSequenceLength());
 		byte[] sequenceBuffer = new byte[bytesToRead]; // Create a buffer to
 														// store the sequence
@@ -214,7 +214,7 @@ public class MemoryManager {
 
 		}
 
-		public void releaseBlock(SequenceFileHandle handle) {
+		public void releaseBlock(MemoryHandle handle) {
 			// POSSIBLE OUTCOMES
 			// 1) Last free block before handle can absorb the size of handle
 			// (when
