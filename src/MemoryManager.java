@@ -10,6 +10,9 @@ import java.util.ListIterator;
 /**
  * Manages the file that stores long sequences using first fit approach.
  * 
+ * Memory Manger contains a nested inner class, {@link FirstFitList} for
+ * managing the free sections of the binary file.
+ * 
  * @author loganlinn
  * 
  */
@@ -64,11 +67,25 @@ public class MemoryManager {
 		return new MemoryHandle(byteOffset, sequenceDescriptor.length());
 	}
 
+	/**
+	 * Releases the block described by the handle (marks it as free). And
+	 * returns the underlying sequence
+	 * 
+	 * @param handle
+	 * @return
+	 */
 	public String removeSequence(MemoryHandle handle) {
 		firstFit.releaseBlock(handle);
 		return retrieveSequence(handle);
 	}
 
+	/**
+	 * Reads the database for the sequence stored at the location described by
+	 * the memory
+	 * 
+	 * @param handle
+	 * @return
+	 */
 	public String retrieveSequence(MemoryHandle handle) {
 		int bytesToRead = getEncodedSequenceLength(handle.getSequenceLength());
 		byte[] sequenceBuffer = new byte[bytesToRead]; // Create a buffer to
@@ -106,7 +123,6 @@ public class MemoryManager {
 	 * @return
 	 */
 	private static byte[] encodeString(String sequence, int numBytes) {
-
 		byte[] output = new byte[numBytes];
 		StringReader reader = new StringReader(sequence);
 		char[] buffer = new char[4];
@@ -207,35 +223,73 @@ public class MemoryManager {
 		firstFit.print();
 	}
 
+	/**
+	 * Class to implement First-Fit algorithm for determining where to place
+	 * blocks.
+	 * 
+	 * When the memory manager requests(allocates) spaces for a sequence, the
+	 * FirstFitList will find the first free block large enough to accommodate
+	 * the sequence size specified by the MemoryManager.
+	 * 
+	 * See method descriptions below for implementation details.
+	 * 
+	 * Uses nested inner class {@link FreeBlock} to represent offset+size of a
+	 * block
+	 * 
+	 * @author loganlinn
+	 * 
+	 */
 	private class FirstFitList {
-		private LinkedList<FreeBlock> freeBlocks = new LinkedList<FreeBlock>();
+		private LinkedList<FreeBlock> freeBlocks;
 
+		/**
+		 * Constructs a FirstFitList
+		 */
 		public FirstFitList() {
-
+			freeBlocks = new LinkedList<FreeBlock>();
 		}
 
+		/**
+		 * Releases the memory allocated at the offset and size indicated in the
+		 * MemoryHandle.
+		 * 
+		 * The newly released space is not written to, but simply marked as
+		 * free. The released space's data is overwritten when the block is
+		 * re-allocated
+		 * 
+		 * Combines adjacent free blocks to form larger free blocks.
+		 * 
+		 * Goal: keep the free list at minimal length with blocks of maximal
+		 * size
+		 * 
+		 * Release Scenarios:
+		 * 
+		 * -- There is a free block immediately before the released handle. ->
+		 * increase size of free block
+		 * 
+		 * -- There is a free block immediately after the released handle ->
+		 * increase size of free block, free block offset becomes offset of the
+		 * released file handle
+		 * 
+		 * -- There is a free block immediately before AND after the released
+		 * handle -> remove the free block succeeds the released handle,
+		 * increase the size of the first free block by the size of the released
+		 * handle's size and the removed free block's size. (A merge)
+		 * 
+		 * -- There are no free blocks immediately before OR after -> ---- Free
+		 * list is empty -> create new block and insert into list ---- There are
+		 * sequences stored before and after the handle -> Create a new handle
+		 * and insert it BEFORE the first block with a greater offset. This
+		 * keeps the list of free blocks in order!
+		 * 
+		 * @param handle
+		 */
 		public void releaseBlock(MemoryHandle handle) {
-			// POSSIBLE OUTCOMES
-			// 1) Last free block before handle can absorb the size of handle
-			// (when
-			// block.end == handle.offset)
-			// Otherwise, that means there's a block we shouldn't touch between
-			// free
-			// block and handle
-			// 2) Next free block can expand backwards (when handle.end ==
-			// block.offset)
-			// 3) Both (free blocks before and after can combine)
-			// 4) Handle just becomes a free block
-			// a) no surrounding free blocks
-			// b) first free block
-
-			// fast forward
 
 			int size = MemoryManager.getEncodedSequenceLength(handle
 					.getSequenceLength());
 			long offset = handle.getSequenceFileOffset();
 			long end = size + offset;
-			// System.out.println("  Deleting "+offset+"+"+size+"="+end);
 
 			/*
 			 * Find blocks that could be merged
@@ -247,7 +301,6 @@ public class MemoryManager {
 				FreeBlock currBlock = blockIt.next();
 
 				if (currBlock.getEnd() == offset) {
-					// System.out.println("    Prev "+currBlock);
 					prevBlock = currBlock;
 
 					// Break if we have already found our next block
@@ -255,35 +308,33 @@ public class MemoryManager {
 						break;
 					}
 				} else if (currBlock.getOffset() == end) {
-					// System.out.println("    Next "+currBlock);
 					nextBlock = currBlock;
 
 					// Break if we have already found our previous block
 					if (prevBlock != null) {
 						break;
 					}
-				} else if (currBlock.getOffset() > end) {
+				} else if (currBlock.getOffset() > end) { // No merges possible
 					/*
-					 * Move iterator back so we can insert right before
-					 * currBlock which has a larger offset
+					 * Move iterator back so we can INSERT right BEFORE
+					 * currBlock which has a LARGER offset
 					 */
 					blockIt.previous();
 					break;
 				}
 			}
 
-			if (prevBlock != null && nextBlock != null) {
-				// System.out.println("  Merging blocks");
+			/*
+			 * Determine which release scenario we are in.
+			 */
+			if (prevBlock != null && nextBlock != null) { // Merge
 				freeBlocks.remove(nextBlock);
 				prevBlock.addToEnd(size + nextBlock.getSize());
-			} else if (prevBlock != null) {
-				// System.out.println("  Adding to end");
+			} else if (prevBlock != null) { // A block exists immediately before
 				prevBlock.addToEnd(size);
-			} else if (nextBlock != null) {
-				// System.out.println("  Adding to start");
+			} else if (nextBlock != null) { // A block exists immediately after
 				nextBlock.addToFront(size);
-			} else {
-				// System.out.println("  Creating new free block "+offset+"+"+size);
+			} else { // No merging possible
 				/*
 				 * If lists is empty, iterator will add to beginning. Else, we
 				 * are inserting before the bigger
@@ -294,9 +345,30 @@ public class MemoryManager {
 		}
 
 		/**
+		 * Allocates space for an encoded sequence, given its size in bytes.
+		 * 
+		 * Allocation Sequence:
+		 * 
+		 * -> Step though the free list, looking for a block with the same or
+		 * larger size as the requested size
+		 * 
+		 * -- If we find a block with the exact same size ad the requested size,
+		 * remove the free block from the list
+		 * 
+		 * -- If we find a block larger than requested size, reduce its size by
+		 * MOVING its offset FORWARD (ie take the first part of the sequence)
+		 * 
+		 * -- If a large enough block does not exist, the FirstFitList returns
+		 * an offset beyond the end of the file. When this occurs, if there is a
+		 * free block at the end of the list (previously determined to be too
+		 * small to fully contain the allocated space), the FreeList returns the
+		 * offset of the beginning of that free block.
+		 * 
+		 * 
 		 * Return the byte offset in the file where the sequence will be stored
 		 * 
-		 * @param sequenceLength
+		 * @param blockSize
+		 *            in bytes
 		 * @return
 		 */
 		public long allocateBlock(int blockSize) {
@@ -330,9 +402,21 @@ public class MemoryManager {
 				blockIt.remove();
 			}
 			return eof;
-			/*
-			 * If we don't have a free space, we return a negative number
-			 */
+		}
+
+		/**
+		 * Print the FirstFit's free blocks
+		 */
+		public void print() {
+			if (freeBlocks.isEmpty()) {
+				System.out.println("Free Block List: none");
+				return;
+			}
+			System.out.println("Free Block List:");
+			int i = 0;
+			for (FreeBlock block : freeBlocks) {
+				System.out.println("[Block " + (++i) + "] " + block.toString());
+			}
 		}
 
 		/**
@@ -345,6 +429,14 @@ public class MemoryManager {
 			private int size; // block size in bytes
 			private long offset; // location in file
 
+			/**
+			 * Constructs a FreeBlock
+			 * 
+			 * @param size
+			 *            of block in BYTES
+			 * @param offset
+			 *            from beginning of file in BYTES
+			 */
 			public FreeBlock(int size, long offset) {
 				super();
 				this.size = size;
@@ -365,41 +457,53 @@ public class MemoryManager {
 				return offset;
 			}
 
+			/**
+			 * @return the offset of the end of the free block
+			 */
 			public long getEnd() {
 				return offset + size;
 			}
 
+			/**
+			 * Expand the free block's size from the end by step amount
+			 * 
+			 * @param step
+			 *            size in bytes
+			 */
 			public void addToEnd(int step) {
 				size += step;
 			}
 
+			/**
+			 * Expand the free block's size from the start by step amount
+			 * 
+			 * @param step
+			 *            size in bytes
+			 */
 			public void addToFront(int step) {
 				size += step;
 				offset -= step;
 			}
 
+			/**
+			 * Reduce the free block's size from the start by step amount. Move
+			 * the beginning offset forward by step amount.
+			 * 
+			 * @param step
+			 *            size in bytes
+			 */
 			public void takeFromFront(int step) {
 				size -= step;
 				offset += step;
 			}
 
+			/**
+			 * Print a message representing this free block
+			 */
 			public String toString() {
 				return "Starting Byte Location: " + offset + ", Size " + size
 						+ (size == 1 ? " byte" : " bytes");
 			}
-		}
-
-		public void print() {
-			if(freeBlocks.isEmpty()){
-				System.out.println("Free Block List: none");
-				return;
-			}
-			System.out.println("Free Block List:");
-			int i = 0;
-			for (FreeBlock block : freeBlocks) {
-				System.out.println("[Block " + (++i) + "] " + block.toString());
-			}
-		}
-	}
-
-}
+		} /* end FreeBlock */
+	} /* end FirstFitList */
+} /* end MemoryManager */
