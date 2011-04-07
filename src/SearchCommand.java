@@ -24,7 +24,7 @@ public class SearchCommand {
 	private final SearchMode mode; // Default mode
 	private Sequence searchSequence;
 	private int numNodesVisited;
-	private List<Sequence> matches;
+	private List<SavedSequence> matches;
 
 	/**
 	 * Creates a search operation where you can specify exact search
@@ -64,7 +64,7 @@ public class SearchCommand {
 	public Node execute(Node root) {
 		// Instantiate the members to record search progress prior to execution
 		numNodesVisited = 0;
-		matches = new LinkedList<Sequence>();
+		matches = new LinkedList<SavedSequence>();
 		// Call the search method on the root node, passing this
 		root.search(this);
 		// Report the results
@@ -89,7 +89,7 @@ public class SearchCommand {
 	 * 
 	 * @param matchedSequence
 	 */
-	public void matchFound(Sequence matchedSequence) {
+	public void matchFound(SavedSequence matchedSequence) {
 		this.matches.add(matchedSequence);
 	}
 
@@ -164,7 +164,7 @@ public class SearchCommand {
 	/**
 	 * @return the matches
 	 */
-	public List<Sequence> getMatches() {
+	public List<SavedSequence> getMatches() {
 		return matches;
 	}
 
@@ -172,7 +172,7 @@ public class SearchCommand {
 	 * @param matches
 	 *            the matches to set
 	 */
-	public void setMatches(List<Sequence> matches) {
+	public void setMatches(List<SavedSequence> matches) {
 		this.matches = matches;
 	}
 }

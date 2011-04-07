@@ -3,19 +3,21 @@
  * @author loganlinn
  * @author matthewibarra
  * 
- * SequenceLeafNode is a class that implements the Node class.
- * This is the class that creates the leaf node which contains a sequnce that has been added to the DNA Tree.
+ *         SequenceLeafNode is a class that implements the Node class. This is
+ *         the class that creates the leaf node which contains a sequnce that
+ *         has been added to the DNA Tree.
  */
 public class SequenceLeafNode implements Node {
-	private Sequence sequence; // Sequence data contained in this node
-	private SequenceFileHandle fileHandle; // References where the sequence is stored
-	
+	private SavedSequence sequence; // Sequence data contained in this node
+	private SequenceFileHandle fileHandle; // References where the sequence is
+											// stored
+
 	/**
 	 * Constructs a SequenceNode given a Sequence
 	 * 
 	 * @param sequence
 	 */
-	public SequenceLeafNode(Sequence sequence) {
+	public SequenceLeafNode(SavedSequence sequence) {
 		this.sequence = sequence;
 	}
 
@@ -41,7 +43,7 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node insert(Sequence sequence) {
+	public Node insert(SavedSequence sequence) {
 		// At least one of the sequences should have more characters.
 		// If they don't that indicates a duplicate. We could also compare
 		// sequences here
@@ -63,7 +65,7 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node remove(Sequence sequence) {
+	public Node remove(SavedSequence sequence) {
 		// Verify this is a matching sequence
 		if (this.sequence.equals(sequence)) {
 			return EmptyLeafNode.getInstance();
@@ -80,11 +82,10 @@ public class SequenceLeafNode implements Node {
 	@Override
 	public void search(SearchCommand searchData) {
 		searchData.incrementNodesVisited();
-		if (searchData.matchExact() && this.sequence.equals(searchData.getSearchSequence())) {
-			// If we are in strict mode, and sequences match exactly, we can add the match
-			searchData.matchFound(this.sequence);
-		} else {
-			// If we have gotten this far as a non-exact search, we must be a match
+		if ((searchData.matchExact() && this.sequence.equals(searchData
+				.getSearchSequence())) || !searchData.matchExact()) {
+			// If we are in strict mode, and sequences match exactly, we can add
+			// the match
 			searchData.matchFound(this.sequence);
 		}
 	}
@@ -92,7 +93,7 @@ public class SequenceLeafNode implements Node {
 	/**
 	 * @return the sequence
 	 */
-	public Sequence getSequence() {
+	public SavedSequence getSequence() {
 		return sequence;
 	}
 
@@ -100,9 +101,10 @@ public class SequenceLeafNode implements Node {
 	 * @param sequence
 	 *            the sequence to set
 	 */
-	public void setSequence(Sequence sequence) {
+	public void setSequence(SavedSequence sequence) {
 		this.sequence = sequence;
 	}
+
 	/**
 	 * @return the sequence as a String
 	 */

@@ -30,7 +30,7 @@ public class Tree {
 		root.print();
 	}
 	
-	public void search(String sequenceId, boolean exactSearch){
+	public void search(SearchCommand searchCommand){
 		
 	}
 }
