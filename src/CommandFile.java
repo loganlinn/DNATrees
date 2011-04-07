@@ -73,7 +73,7 @@ public class CommandFile {
 	 * @throws IOException
 	 * @throws P3Exception
 	 */
-	public void parse(Tree tree) throws IOException, P3Exception {
+	public void parse(Tree tree, MemoryManager memoryManager) throws IOException, P3Exception {
 
 		File commandFile = new File(this.commandFilePath);
 		FileInputStream fileStream;

@@ -131,15 +131,15 @@ public class P3 {
 		/*
 		 * Create empty tree
 		 */
-		Tree dnaTree = new Tree();
+		Tree tree = new Tree();
 		
 		/*
 		 * Attempt to parse the command file, catching any errors
 		 */
 		try {
-			MemoryManager sequenceManager = new MemoryManager();
-			commandFile.parse(dnaTree);
-			sequenceManager.close();
+			MemoryManager memoryManager = new MemoryManager();
+			commandFile.parse(tree, memoryManager);
+			memoryManager.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
