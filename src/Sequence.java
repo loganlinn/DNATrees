@@ -26,52 +26,11 @@ public class Sequence {
 	public Sequence(String sequenceId) {
 		characters = sequenceId.toCharArray();
 	}
-	
-	/**
-	 * Generates a report character representation in sequence. This method is used using executing the print stats command.
-	 */
-	public String stats() {
-
-		char[] alphabet = Sequence.ALPHABET;
-		double[] averages = new double[alphabet.length]; // we can assume values
-															// are initialized
-															// to 0
-
-		// Count the number of times each character of the alphabet appears
-		for (char c : characters) {
-			for (int i = 0; i < alphabet.length; i++) {
-				if (alphabet[i] == c) {
-					averages[i]++; // increment the sum
-					break; // we have found a match, no need to compare rest of
-							// characters in alphabet
-				}
-			}
-		}
-		// Divide the sums by total to get the average
-		int totalCharacters = characters.length;
-		for (int i = 0; i < averages.length; i++) {
-			averages[i] = (averages[i] / totalCharacters) * 100;
-		}
-
-		// Create format string
-		NumberFormat formatter = new DecimalFormat("0.00");
-		String formattedStrings = "", delimiter = ", ";
-		for (int i = 0; i < alphabet.length; i++) {
-			formattedStrings += alphabet[i] + "("
-					+ formatter.format(averages[i]) + ")" + delimiter;
-		}
-
-		return formattedStrings.substring(0, formattedStrings.length()
-				- delimiter.length());
-	}
 
 	/**
 	 * Returns character at current position
 	 */
 	public char current() {
-		if (!hasNext()) {
-			throw new NoSuchElementException();
-		}
 		return characters[position];
 	}
 
@@ -82,7 +41,7 @@ public class Sequence {
 	 */
 	public char next() {
 		if (!hasNext()) {
-			throw new NoSuchElementException();
+			return current();
 		}
 		return characters[position++];
 	}
@@ -93,7 +52,7 @@ public class Sequence {
 	 */
 	public char prev() {
 		if (!hasPrev()) {
-			throw new NoSuchElementException();
+			return current();
 		}
 		return characters[--position];
 	}
