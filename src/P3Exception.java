@@ -1,5 +1,5 @@
 /**
- * An exception type for P2 errors
+ * An exception type for P3 errors
  * - Parsing
  * @author loganlinn
  *
