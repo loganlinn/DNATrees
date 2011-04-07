@@ -96,7 +96,7 @@ public class CommandFile {
 					argument = getNextArgument(lineTokens);//sequenceId
 					length = getNextIntArgument(lineTokens);//length
 //					commandList.add(new InsertCommand(argument, length));
-					
+					tree.insert(new SavedSequence(argument, memoryManager.storeSequence(br.readLine())));
 				} else if (REMOVE_COMMAND.equals(command)) {
 					/*
 					 * Remove command
