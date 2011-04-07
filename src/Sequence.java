@@ -17,14 +17,16 @@ public class Sequence {
 	private int position = 0; // Stores the index of the next unseen character
 								// in sequence
 	private final char[] characters; // Sequence characters
-
+	private final SequenceFileHandle fileHandle; 
+	
 	/**
 	 * Constructs a sequence given a string of sequence characters
 	 * 
 	 * @param sequenceCharacters
 	 */
-	public Sequence(String sequenceInput) {
-		characters = sequenceInput.toCharArray();
+	public Sequence(String sequenceId, SequenceFileHandle fileHandle) {
+		characters = sequenceId.toCharArray();
+		this.fileHandle = fileHandle;
 	}
 	
 	/**
@@ -170,6 +172,13 @@ public class Sequence {
 
 	public boolean isPrefixOf(Sequence otherSequence) {
 		return otherSequence.toString().startsWith(new String(characters));
+	}
+
+	/**
+	 * @return the fileHandle
+	 */
+	public SequenceFileHandle getFileHandle() {
+		return fileHandle;
 	}
 
 }

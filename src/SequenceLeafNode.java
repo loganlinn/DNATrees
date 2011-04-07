@@ -70,7 +70,7 @@ public class SequenceLeafNode implements Node {
 		if (this.sequence.equals(sequence)) {
 			return EmptyLeafNode.getInstance();
 		} else {
-			RemoveCommand.sequenceNotFound(sequence);
+			P3.sequenceNotFound(sequence);
 			return this;
 		}
 	}

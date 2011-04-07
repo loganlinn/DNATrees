@@ -153,4 +153,26 @@ public class P3 {
 		 */
 		dnaTree.executeOperations(commandFile.getCommandList());
 	}
+
+	/**
+	 * Helper method to print value with indents
+	 * 
+	 * @param level
+	 */
+	protected static void indentedPrint(int level, String value){
+		// Print the indents
+		for(int i = 0; i < level; i++){
+			PrintCommand.out.print(PrintCommand.LEVEL_INDENT);
+		}
+		// Print the value
+		PrintCommand.out.println(value);
+	}
+
+	/**
+	 * Output a message when a sequence is not found when trying to remove
+	 * @param sequence
+	 */
+	public static void sequenceNotFound(Sequence sequence){
+		System.out.println("Could not find sequence, \""+sequence+"\", to remove.");
+	}
 }

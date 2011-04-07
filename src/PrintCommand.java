@@ -35,7 +35,7 @@ public class PrintCommand extends Command{
 	 * @param level
 	 */
 	public static void printInternalNode(int level){
-		indentedPrint(level, INTERNAL_NODE);
+		P3.indentedPrint(level, INTERNAL_NODE);
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class PrintCommand extends Command{
 	 * @param level
 	 */
 	public static void printEmptyLeafNode(int level){
-		indentedPrint(level, EMPTY_LEAF_NODE);
+		P3.indentedPrint(level, EMPTY_LEAF_NODE);
 	}
 	
 	/**
@@ -51,20 +51,6 @@ public class PrintCommand extends Command{
 	 * @param level
 	 */
 	public static void printSequenceLeafNode(int level, String printSequence){
-		indentedPrint(level, printSequence);
-	}
-	
-	/**
-	 * Helper method to print value with indents
-	 * 
-	 * @param level
-	 */
-	protected static void indentedPrint(int level, String value){
-		// Print the indents
-		for(int i = 0; i < level; i++){
-			PrintCommand.out.print(LEVEL_INDENT);
-		}
-		// Print the value
-		PrintCommand.out.println(value);
+		P3.indentedPrint(level, printSequence);
 	}
 }

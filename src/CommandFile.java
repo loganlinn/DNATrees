@@ -99,9 +99,10 @@ public class CommandFile {
 					/*
 					 * Insert command
 					 */
-					argument = getNextArgument(lineTokens);
-					length = getNextIntArgument(lineTokens);
+					argument = getNextArgument(lineTokens);//sequenceId
+					length = getNextIntArgument(lineTokens);//length
 					commandList.add(new InsertCommand(argument, length));
+					
 				} else if (REMOVE_COMMAND.equals(command)) {
 					/*
 					 * Remove command

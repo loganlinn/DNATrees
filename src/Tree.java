@@ -33,4 +33,20 @@ public class Tree {
 			root = operation.execute(root);
 		}
 	}
+	
+	public void insert(Sequence storedSequence){
+		root = root.insert(storedSequence);
+	}
+	
+	public void remove(Sequence storedSequence){
+		root = root.remove(storedSequence);
+	}
+	
+	public void print(){
+		root.print(0);
+	}
+	
+	public void search(String sequenceId, boolean exactSearch){
+		
+	}
 }

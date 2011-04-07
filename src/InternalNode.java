@@ -104,7 +104,7 @@ public class InternalNode implements Node {
 	@Override
 	public void print(int level) {
 		// Visit self
-		PrintCommand.printInternalNode(level);
+//		PrintCommand.printInternalNode(level);
 		// Visit children left to right: indent
 		level++;
 		A.print(level);

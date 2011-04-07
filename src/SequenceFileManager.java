@@ -32,9 +32,7 @@ public class SequenceFileManager {
 	 * @param sequence
 	 * @return
 	 */
-	public SequenceFileHandle storeSequence(Sequence sequence) {
-		String sequenceDescriptor = sequence.getSequence();
-
+	public SequenceFileHandle storeSequence(String sequenceDescriptor){
 		int sequenceBlockLength = getEncodedSequenceLength(sequenceDescriptor
 				.length());
 
@@ -64,7 +62,7 @@ public class SequenceFileManager {
 
 	public String retrieveSequence(SequenceFileHandle handle) {
 		int bytesToRead = getEncodedSequenceLength(handle.getSequenceLength());
-		byte[] readData = new byte[bytesToRead];
+		byte[] sequenceBuffer = new byte[bytesToRead]; // Create a buffer to store the sequence
 
 		// System.out.println(handle);
 
@@ -72,7 +70,7 @@ public class SequenceFileManager {
 
 			seqAccess.seek(handle.getSequenceFileOffset());
 
-			seqAccess.read(readData);
+			seqAccess.read(sequenceBuffer);
 
 			// seqAccess.close();
 
@@ -82,7 +80,7 @@ public class SequenceFileManager {
 			e.printStackTrace();
 		}
 
-		return new String(readData);
+		return new String(sequenceBuffer);
 	}
 
 	public void removeSequence(SequenceFileHandle handle) {
@@ -104,21 +102,32 @@ public class SequenceFileManager {
 		long offset = handle.getSequenceFileOffset();
 		long end = size + offset;
 //		System.out.println("  Deleting "+offset+"+"+size+"="+end);
-		
-		ListIterator<FreeBlock> blockIt = freeBlocks.listIterator();
 
+		/*
+		 * Find blocks that could be merged
+		 */
+		ListIterator<FreeBlock> blockIt = freeBlocks.listIterator();
 		FreeBlock prevBlock = null;
 		FreeBlock nextBlock = null;
-
 		while (blockIt.hasNext()) {
 			FreeBlock currBlock = blockIt.next();
 			
 			if (currBlock.getEnd() == offset) {
 //				System.out.println("    Prev "+currBlock);
 				prevBlock = currBlock;
+				
+				// Break if we have already found our next block
+				if(nextBlock != null){
+					break;
+				}
 			} else if (currBlock.getOffset() == end) {
 //				System.out.println("    Next "+currBlock);
 				nextBlock = currBlock;
+				
+				// Break if we have already found our previous block
+				if(prevBlock != null){
+					break;
+				}
 			}
 		}
 
