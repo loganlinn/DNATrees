@@ -11,22 +11,20 @@ import java.util.NoSuchElementException;
  * @author loganlinn
  * 
  */
-public class StoredSequence {
+public class Sequence {
 	public static final char[] ALPHABET = {'A','C','G','T'};
 	public static final String RE_ALPHABET = "[ACGT]+"; //regex needed for checking the parsed in data from the command file.
 	private int position = 0; // Stores the index of the next unseen character
 								// in sequence
 	private final char[] characters; // Sequence characters
-	private final SequenceFileHandle fileHandle; 
 	
 	/**
 	 * Constructs a sequence given a string of sequence characters
 	 * 
 	 * @param sequenceCharacters
 	 */
-	public StoredSequence(String sequenceId, SequenceFileHandle fileHandle) {
+	public Sequence(String sequenceId) {
 		characters = sequenceId.toCharArray();
-		this.fileHandle = fileHandle;
 	}
 	
 	/**
@@ -34,7 +32,7 @@ public class StoredSequence {
 	 */
 	public String stats() {
 
-		char[] alphabet = StoredSequence.ALPHABET;
+		char[] alphabet = Sequence.ALPHABET;
 		double[] averages = new double[alphabet.length]; // we can assume values
 															// are initialized
 															// to 0
@@ -138,8 +136,8 @@ public class StoredSequence {
 	 * Compare with another Sequence
 	 */
 	public boolean equals(Object obj) {
-		if (obj instanceof StoredSequence) {
-			return (this.toString().equals(((StoredSequence) obj).toString()));
+		if (obj instanceof Sequence) {
+			return (this.toString().equals(((Sequence) obj).toString()));
 		}
 		return super.equals(obj);
 	}
@@ -170,15 +168,7 @@ public class StoredSequence {
 		return characters;
 	}
 
-	public boolean isPrefixOf(StoredSequence otherSequence) {
+	public boolean isPrefixOf(Sequence otherSequence) {
 		return otherSequence.toString().startsWith(new String(characters));
 	}
-
-	/**
-	 * @return the fileHandle
-	 */
-	public SequenceFileHandle getFileHandle() {
-		return fileHandle;
-	}
-
 }

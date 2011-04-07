@@ -17,28 +17,12 @@ public class Tree {
 	public Tree() {
 		root = EmptyLeafNode.getInstance();
 	}
-
-	/**
-	 * Executes a queue of Operation objects
-	 * 
-	 * @param operations
-	 */
-	public void executeOperations(Queue<Command> operations) {
-		// Require that operations isn't null and has Operations
-		if (operations == null || operations.size() < 1) {
-			return;
-		}
-		// Iterate over all operations and call the execute method
-		for (Command operation : operations) {
-			root = operation.execute(root);
-		}
-	}
 	
-	public void insert(StoredSequence storedSequence){
+	public void insert(SavedSequence storedSequence){
 		root = root.insert(storedSequence);
 	}
 	
-	public void remove(StoredSequence storedSequence){
+	public void remove(SavedSequence storedSequence){
 		root = root.remove(storedSequence);
 	}
 	

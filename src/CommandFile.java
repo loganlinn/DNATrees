@@ -30,11 +30,8 @@ public class CommandFile {
 	private static final String LINE_NUMBER_MESSAGE_SUFFIX = ")";
 
 	private String commandFilePath; // Path to command file
-	private Queue<Command> commandList; // Collection of commands extracted from
-										// command file
 	private int lineNumber = 0; // Tracks which line of the command file we are
 								// parsing
-
 	private PrintStream out = System.out; // Assign output to a print stream for
 											// configurability
 
@@ -79,7 +76,6 @@ public class CommandFile {
 	 * @throws P3Exception
 	 */
 	public void parse() throws SequenceException, IOException, P3Exception {
-		commandList = new LinkedList<Command>();
 
 		File commandFile = new File(this.commandFilePath);
 		FileInputStream fileStream;
@@ -101,20 +97,20 @@ public class CommandFile {
 					 */
 					argument = getNextArgument(lineTokens);//sequenceId
 					length = getNextIntArgument(lineTokens);//length
-					commandList.add(new InsertCommand(argument, length));
+//					commandList.add(new InsertCommand(argument, length));
 					
 				} else if (REMOVE_COMMAND.equals(command)) {
 					/*
 					 * Remove command
 					 */
 					argument = getNextArgument(lineTokens);
-					commandList.add(new RemoveCommand(argument));
+//					commandList.add(new RemoveCommand(argument));
 				} else if (PRINT_COMMAND.equals(command)) {
 					/*
 					 * Print command
 					 */
 
-					commandList.add(new PrintCommand());
+//					commandList.add(new PrintCommand());
 
 				} else if (SEARCH_COMMAND.equals(command)) {
 					/*
@@ -124,7 +120,7 @@ public class CommandFile {
 															// sequence
 															// descriptor
 					if (argument != null) {
-						commandList.add(new SearchCommand(argument));
+//						commandList.add(new SearchCommand(argument));
 					} else {
 						throw new SequenceException(SEARCH_COMMAND
 								+ " missing argument." + getLineNumberMessage());
@@ -159,21 +155,6 @@ public class CommandFile {
 	 */
 	public void setCommandFilePath(String commandFilePath) {
 		this.commandFilePath = commandFilePath;
-	}
-
-	/**
-	 * @return the commandList
-	 */
-	public Queue<Command> getCommandList() {
-		return commandList;
-	}
-
-	/**
-	 * @param commandList
-	 *            the commandList to set
-	 */
-	public void setCommandList(Queue<Command> commandList) {
-		this.commandList = commandList;
 	}
 
 }

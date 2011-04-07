@@ -11,7 +11,7 @@ import java.util.List;
  * @author loganlinn
  * 
  */
-public class SearchCommand extends Command {
+public class SearchCommand {
 	public static enum SearchMode { EXACT, PREFIX }
 	public static final String SEARCH_EXACT_SUFFIX = "$";
 	private static final String EMPTY_MATCHES_MESSAGE = "no sequence founds";
@@ -19,9 +19,9 @@ public class SearchCommand extends Command {
 	private static final String NODES_VISITED_PREFIX = "# of nodes visisted: ";
 	
 	private final SearchMode mode; // Default mode
-	private StoredSequence searchSequence;
+	private Sequence searchSequence;
 	private int numNodesVisited;
-	private List<StoredSequence> matches;
+	private List<Sequence> matches;
 	
 	
 	/**
@@ -32,7 +32,7 @@ public class SearchCommand extends Command {
 	 */
 	public SearchCommand(String sequenceDescriptor, boolean exactSearch) throws SequenceException{
 		mode = exactSearch ? SearchMode.EXACT : SearchMode.PREFIX;
-		searchSequence = createSequence(sequenceDescriptor);
+		searchSequence = new Sequence(sequenceDescriptor);
 	}
 	
 	/**
@@ -50,22 +50,21 @@ public class SearchCommand extends Command {
 			mode = SearchMode.PREFIX;
 		}
 		
-		searchSequence = createSequence(sequenceDescriptor);
+		searchSequence = new Sequence(sequenceDescriptor);
 	}
 
 	/**
 	 * Run a search operation on the DNA tree's root
 	 */
-	@Override
 	public Node execute(Node root) {
 		// Instantiate the members to record search progress prior to execution
 		numNodesVisited = 0;
-		matches = new LinkedList<StoredSequence>();
+		matches = new LinkedList<Sequence>();
 		// Call the search method on the root node, passing this
 		root.search(this);
 		// Report the results
 		reportResults();
-		out.println();	// print an empty line for readability
+		System.out.println();	// print an empty line for readability
 		// Search operation doesn't change tree structure -> return the root back to itself
 		return root;
 	}
@@ -83,7 +82,7 @@ public class SearchCommand extends Command {
 	 * 
 	 * @param matchedSequence
 	 */
-	public void matchFound(StoredSequence matchedSequence){
+	public void matchFound(Sequence matchedSequence){
 		this.matches.add(matchedSequence);
 	}
 	
@@ -100,15 +99,15 @@ public class SearchCommand extends Command {
 	 * Called when the search has completed
 	 */
 	public void reportResults(){
-		out.println("Search "+searchSequence.toString()+" ["+mode.toString()+"]");
-		out.println(NODES_VISITED_PREFIX+this.numNodesVisited);
+		System.out.println("Search "+searchSequence.toString()+" ["+mode.toString()+"]");
+		System.out.println(NODES_VISITED_PREFIX+this.numNodesVisited);
 		if(matches.isEmpty()){
 			// Print a message if we don't have any matches
-			out.println(EMPTY_MATCHES_MESSAGE);
+			System.out.println(EMPTY_MATCHES_MESSAGE);
 		}else{
 			// Else, print out all of the matches
-			for(StoredSequence matchedSequence : matches){
-				out.println(MATCH_FOUND_PREFIX+matchedSequence.toString());
+			for(Sequence matchedSequence : matches){
+				System.out.println(MATCH_FOUND_PREFIX+matchedSequence.toString());
 			}
 		}
 		
@@ -124,14 +123,14 @@ public class SearchCommand extends Command {
 	/**
 	 * @return the searchSequence
 	 */
-	public StoredSequence getSearchSequence() {
+	public Sequence getSearchSequence() {
 		return searchSequence;
 	}
 
 	/**
 	 * @param searchSequence the searchSequence to set
 	 */
-	public void setSearchSequence(StoredSequence searchSequence) {
+	public void setSearchSequence(Sequence searchSequence) {
 		this.searchSequence = searchSequence;
 	}
 
@@ -152,14 +151,14 @@ public class SearchCommand extends Command {
 	/**
 	 * @return the matches
 	 */
-	public List<StoredSequence> getMatches() {
+	public List<Sequence> getMatches() {
 		return matches;
 	}
 
 	/**
 	 * @param matches the matches to set
 	 */
-	public void setMatches(List<StoredSequence> matches) {
+	public void setMatches(List<Sequence> matches) {
 		this.matches = matches;
 	}
 }

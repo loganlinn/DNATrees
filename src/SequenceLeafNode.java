@@ -7,7 +7,7 @@
  * This is the class that creates the leaf node which contains a sequnce that has been added to the DNA Tree.
  */
 public class SequenceLeafNode implements Node {
-	private StoredSequence sequence; // Sequence data contained in this node
+	private Sequence sequence; // Sequence data contained in this node
 	private SequenceFileHandle fileHandle; // References where the sequence is stored
 	
 	/**
@@ -15,7 +15,7 @@ public class SequenceLeafNode implements Node {
 	 * 
 	 * @param sequence
 	 */
-	public SequenceLeafNode(StoredSequence sequence) {
+	public SequenceLeafNode(Sequence sequence) {
 		this.sequence = sequence;
 	}
 
@@ -25,9 +25,7 @@ public class SequenceLeafNode implements Node {
 	 */
 	@Override
 	public void print(int level) {
-		String sequenceValue = sequence.toString();
-
-		PrintCommand.printSequenceLeafNode(level, sequenceValue);
+		P3.indentedPrint(level, sequence.toString());
 	}
 
 	/**
@@ -43,13 +41,13 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node insert(StoredSequence sequence) {
+	public Node insert(Sequence sequence) {
 		// At least one of the sequences should have more characters.
 		// If they don't that indicates a duplicate. We could also compare
 		// sequences here
 		if (this.sequence.equals(sequence)) {
 			// Otherwise, we must have the identical sequence
-			InsertCommand.duplicateSequenceError(sequence);
+			P3.duplicateSequenceError(sequence);
 			// Return this so not modify tree structure
 			return this;
 		} else {
@@ -65,7 +63,7 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node remove(StoredSequence sequence) {
+	public Node remove(Sequence sequence) {
 		// Verify this is a matching sequence
 		if (this.sequence.equals(sequence)) {
 			return EmptyLeafNode.getInstance();
@@ -94,7 +92,7 @@ public class SequenceLeafNode implements Node {
 	/**
 	 * @return the sequence
 	 */
-	public StoredSequence getSequence() {
+	public Sequence getSequence() {
 		return sequence;
 	}
 
@@ -102,7 +100,7 @@ public class SequenceLeafNode implements Node {
 	 * @param sequence
 	 *            the sequence to set
 	 */
-	public void setSequence(StoredSequence sequence) {
+	public void setSequence(Sequence sequence) {
 		this.sequence = sequence;
 	}
 	/**

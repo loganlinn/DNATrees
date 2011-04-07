@@ -76,6 +76,7 @@ import java.io.PrintStream;
 public class P3 {
 	/* Message for output to display appropriate usage */
 	private static final String PROGRAM_USAGE_MESSAGE = "usage: P3 <command-file>";
+	private static final String PRINT_INDENT = "  ";
 
 	/**
 	 * On my honor:
@@ -126,7 +127,12 @@ public class P3 {
 		
 		/* Instantiate a new CommandFile with the path to the command file */
 		CommandFile commandFile = new CommandFile(commandFilePath);
-
+		
+		/*
+		 * Create empty tree
+		 */
+		Tree dnaTree = new Tree();
+		
 		/*
 		 * Attempt to parse the command file, catching any errors
 		 */
@@ -143,15 +149,11 @@ public class P3 {
 			return;
 		}
 
-		/*
-		 * Create empty tree
-		 */
-		Tree dnaTree = new Tree();
+		
 
 		/*
 		 * Execute the remaining commands from the command file
 		 */
-		dnaTree.executeOperations(commandFile.getCommandList());
 	}
 
 	/**
@@ -162,17 +164,27 @@ public class P3 {
 	protected static void indentedPrint(int level, String value){
 		// Print the indents
 		for(int i = 0; i < level; i++){
-			PrintCommand.out.print(PrintCommand.LEVEL_INDENT);
+			System.out.print(PRINT_INDENT);
 		}
 		// Print the value
-		PrintCommand.out.println(value);
+		System.out.println(value);
 	}
 
 	/**
 	 * Output a message when a sequence is not found when trying to remove
 	 * @param sequence
 	 */
-	public static void sequenceNotFound(StoredSequence sequence){
+	public static void sequenceNotFound(Sequence sequence){
 		System.out.println("Could not find sequence, \""+sequence+"\", to remove.");
+	}
+
+	/**
+	 * Reports a duplicate sequence has been detected
+	 * 
+	 * @param sequence
+	 */
+	public static void duplicateSequenceError(Sequence sequence) {
+		System.out.println("ERROR: Sequence, \"" + sequence.toString()
+				+ "\" already exists in DNA Tree.");
 	}
 }

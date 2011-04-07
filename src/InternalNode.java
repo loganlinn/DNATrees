@@ -34,7 +34,7 @@ public class InternalNode implements Node {
 	 * @param newSequence
 	 */
 	public InternalNode(SequenceLeafNode existingSequenceNode,
-			StoredSequence newSequence) {
+			Sequence newSequence) {
 		/*
 		 * Fill child to be empty leaf nodes by setting them to flyweight
 		 */
@@ -46,12 +46,12 @@ public class InternalNode implements Node {
 		$ = flyweight;
 
 		/* get reference to existing node's sequence */
-		final StoredSequence existingSequence = existingSequenceNode.getSequence();
+		final Sequence existingSequence = existingSequenceNode.getSequence();
 
 		/*
 		 * Prioritize insert by sequence length
 		 */
-		StoredSequence first, second;
+		Sequence first, second;
 		if (existingSequence.length() < newSequence.length()) {
 			first = newSequence;
 			second = existingSequence;
@@ -120,7 +120,7 @@ public class InternalNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node insert(StoredSequence sequence) {
+	public Node insert(Sequence sequence) {
 		if (sequence.hasNext()) {
 			// Take the next character
 			final char sequenceChar = sequence.next();
@@ -180,8 +180,8 @@ public class InternalNode implements Node {
 	 * @param newPrefixSequence
 	 * @return
 	 */
-	private StoredSequence swapPrefix(StoredSequence newPrefixSequence) {
-		StoredSequence oldPrefix = ((SequenceLeafNode) $).getSequence();
+	private Sequence swapPrefix(Sequence newPrefixSequence) {
+		Sequence oldPrefix = ((SequenceLeafNode) $).getSequence();
 		((SequenceLeafNode) $).setSequence(newPrefixSequence);
 		return oldPrefix;
 	}
@@ -191,7 +191,7 @@ public class InternalNode implements Node {
 	 * 
 	 * @param sequence
 	 */
-	public void insertPrefix(StoredSequence sequence) {
+	public void insertPrefix(Sequence sequence) {
 		// Ensure that the prefix is empty
 		if ($ instanceof EmptyLeafNode) {
 			$ = $.insert(sequence);
@@ -204,7 +204,7 @@ public class InternalNode implements Node {
 			 * We can assume the prefix is a SequenceLeafNode because it is not
 			 * empty and cannot be internal
 			 */
-			InsertCommand.duplicateSequenceError(sequence);
+			P3.duplicateSequenceError(sequence);
 		} else {
 			/*
 			 * Prefix node isn't empty and isn't duplicate, assign sequence to
@@ -220,7 +220,7 @@ public class InternalNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node remove(StoredSequence sequence) {
+	public Node remove(Sequence sequence) {
 		if (sequence.hasNext()) {
 			// Take the next character
 			final char sequenceChar = sequence.next();
@@ -280,7 +280,7 @@ public class InternalNode implements Node {
 		/* Count this node as visited */
 		searchData.incrementNodesVisited();
 
-		final StoredSequence searchSequence = searchData.getSearchSequence();
+		final Sequence searchSequence = searchData.getSearchSequence();
 
 		/* Check if we have seen all of the characters in the searchSequence */
 		if (searchSequence.hasNext()) {
