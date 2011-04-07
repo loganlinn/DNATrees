@@ -152,20 +152,6 @@ public class P3 {
 	}
 
 	/**
-	 * Helper method to print value with indents
-	 * 
-	 * @param level
-	 */
-	protected static void indentedPrint(int level, String value){
-		// Print the indents
-		for(int i = 0; i < level; i++){
-			System.out.print(PRINT_INDENT);
-		}
-		// Print the value
-		System.out.println(value);
-	}
-
-	/**
 	 * Output a message when a sequence is not found when trying to remove
 	 * @param sequence
 	 */

@@ -102,16 +102,13 @@ public class InternalNode implements Node {
 	 * Print the tree recursively with a preorder traversal
 	 */
 	@Override
-	public void print(int level) {
-		// Visit self
-//		PrintCommand.printInternalNode(level);
-		// Visit children left to right: indent
-		level++;
-		A.print(level);
-		C.print(level);
-		G.print(level);
-		T.print(level);
-		$.print(level);
+	public void print() {
+		// Visit children left to right
+		A.print();
+		C.print();
+		G.print();
+		T.print();
+		$.print();
 	}
 
 	/**

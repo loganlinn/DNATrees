@@ -27,7 +27,7 @@ public class Tree {
 	}
 	
 	public void print(){
-		root.print(0);
+		root.print();
 	}
 	
 	public void search(String sequenceId, boolean exactSearch){

@@ -24,8 +24,8 @@ public class SequenceLeafNode implements Node {
 	 * 
 	 */
 	@Override
-	public void print(int level) {
-		P3.indentedPrint(level, sequence.toString());
+	public void print() {
+		System.out.println(sequence.toString());
 	}
 
 	/**

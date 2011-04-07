@@ -36,9 +36,7 @@ public class EmptyLeafNode implements Node {
 	 * Print representation of empty leaf node
 	 */
 	@Override
-	public void print(int level) {
-//		PrintCommand.printEmptyLeafNode(level);
-	}
+	public void print() {	}
 
 	/**
 	 * Only called when an empty leaf-node. Replace self with new non-empty leaf

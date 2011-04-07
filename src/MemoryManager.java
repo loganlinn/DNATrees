@@ -216,7 +216,7 @@ public class MemoryManager {
 	 * A wrapper method for printing our free block
 	 */
 	public void printFreeBlocks() {
-		firstFit.printFreeBlocks();
+		firstFit.print();
 	}
 
 	private class FirstFitList {
@@ -396,13 +396,20 @@ public class MemoryManager {
 			}
 
 			public String toString() {
-				return "Free: " + offset + "+" + size;
+				return "Starting Byte Location: " + offset + ", Size " + size
+						+ (size == 1 ? " byte" : " bytes");
 			}
 		}
 
-		public void printFreeBlocks() {
-			for (FreeBlock fb : freeBlocks) {
-				System.out.println("  " + fb.toString());
+		public void print() {
+			if(freeBlocks.isEmpty()){
+				System.out.println("Free Block List: none");
+				return;
+			}
+			System.out.println("Free Block List:");
+			int i = 0;
+			for (FreeBlock block : freeBlocks) {
+				System.out.println("[Block " + (++i) + "] " + block.toString());
 			}
 		}
 	}
