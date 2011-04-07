@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-public class SequenceFileManagerTest {
+public class MemoryManagerTest {
 	static MemoryManager sfm;
 
 	public static void main(String[] args) {

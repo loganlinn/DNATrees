@@ -133,8 +133,6 @@ public class P3 {
 		 */
 		Tree dnaTree = new Tree();
 		
-		
-		
 		/*
 		 * Attempt to parse the command file, catching any errors
 		 */
