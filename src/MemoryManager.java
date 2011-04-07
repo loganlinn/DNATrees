@@ -61,7 +61,7 @@ public class MemoryManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("LENGTH!"+sequenceDescriptor.length());
 		return new SequenceFileHandle(byteOffset, sequenceDescriptor.length());
 	}
 
@@ -86,7 +86,7 @@ public class MemoryManager {
 			e.printStackTrace();
 		}
 
-		return new String(sequenceBuffer);
+		return decode(sequenceBuffer, handle.getSequenceLength());
 	}
 
 	/**

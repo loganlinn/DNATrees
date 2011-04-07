@@ -56,7 +56,7 @@ public class EmptyLeafNode implements Node {
 	 * @return the same EmptyLeafNode to not alter the tree structure.
 	 */
 	@Override
-	public Node remove(SavedSequence sequence) {
+	public Node remove(Sequence sequence) {
 		P3.sequenceNotFound(sequence);
 		return this;
 	}

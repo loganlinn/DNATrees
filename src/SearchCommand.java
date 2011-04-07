@@ -24,7 +24,7 @@ public class SearchCommand {
 	private final SearchMode mode; // Default mode
 	private Sequence searchSequence;
 	private int numNodesVisited;
-	private List<SavedSequence> matches;
+	private List<SavedSequence> matches = new LinkedList<SavedSequence>();
 
 	/**
 	 * Creates a search operation where you can specify exact search
@@ -56,23 +56,6 @@ public class SearchCommand {
 		}
 
 		searchSequence = new Sequence(sequenceDescriptor);
-	}
-
-	/**
-	 * Run a search operation on the DNA tree's root
-	 */
-	public Node execute(Node root) {
-		// Instantiate the members to record search progress prior to execution
-		numNodesVisited = 0;
-		matches = new LinkedList<SavedSequence>();
-		// Call the search method on the root node, passing this
-		root.search(this);
-		// Report the results
-		reportResults();
-		System.out.println(); // print an empty line for readability
-		// Search operation doesn't change tree structure -> return the root
-		// back to itself
-		return root;
 	}
 
 	/**

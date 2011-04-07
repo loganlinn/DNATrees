@@ -80,7 +80,7 @@ public class CommandFile {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new DataInputStream(new FileInputStream(commandFile))));
-		String line, command, argument;
+		String line, command, argument=null;
 		int length;
 		boolean commandHasArgument;
 		while ((line = br.readLine()) != null) {
@@ -103,7 +103,7 @@ public class CommandFile {
 					 */
 					argument = getNextArgument(lineTokens);
 //					commandList.add(new RemoveCommand(argument));
-					tree.remove(new SavedSequence(argument, memoryManager.storeSequence(br.readLine())));
+					tree.remove(new Sequence(argument));
 				} else if (PRINT_COMMAND.equals(command)) {
 					/*
 					 * Print command
@@ -130,7 +130,8 @@ public class CommandFile {
 							+ command + getLineNumberMessage());
 				}
 
-				System.out.println("Ran command: " + command);
+				System.out.println("Ran command: " + command + (argument==null?"":" "+argument));
+				argument = null;
 			}
 		}
 

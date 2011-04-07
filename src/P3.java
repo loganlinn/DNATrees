@@ -77,7 +77,7 @@ public class P3 {
 	/* Message for output to display appropriate usage */
 	private static final String PROGRAM_USAGE_MESSAGE = "usage: P3 <command-file>";
 	private static final String PRINT_INDENT = "  ";
-
+	public static MemoryManager memoryManager;
 	/**
 	 * On my honor:
 	 * 
@@ -137,7 +137,7 @@ public class P3 {
 		 * Attempt to parse the command file, catching any errors
 		 */
 		try {
-			MemoryManager memoryManager = new MemoryManager();
+			memoryManager = new MemoryManager();
 			commandFile.parse(tree, memoryManager);
 			memoryManager.close();
 		} catch (IOException e) {

@@ -65,9 +65,12 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node remove(SavedSequence sequence) {
+	public Node remove(Sequence sequence) {
 		// Verify this is a matching sequence
 		if (this.sequence.equals(sequence)) {
+			System.out.println("FH:"+fileHandle);
+			System.out.println("S:"+toString());
+			P3.memoryManager.removeSequence(fileHandle);
 			return EmptyLeafNode.getInstance();
 		} else {
 			P3.sequenceNotFound(sequence);

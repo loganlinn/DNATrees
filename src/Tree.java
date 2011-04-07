@@ -22,15 +22,23 @@ public class Tree {
 		root = root.insert(storedSequence);
 	}
 	
-	public void remove(SavedSequence storedSequence){
-		root = root.remove(storedSequence);
+	public void remove(Sequence sequence){
+		root = root.remove(sequence);
 	}
 	
 	public void print(){
+		System.out.println("SequenceIDs:");
 		root.print();
+		P3.memoryManager.printFreeBlocks();
 	}
 	
 	public void search(SearchCommand searchCommand){
+		root.search(searchCommand);
 		
+		System.out.println("# of nodes: "+searchCommand.getNumNodesVisited());
+		for(SavedSequence sequence : searchCommand.getMatches()){
+			System.out.println("key: "+sequence.getSequence());
+			System.out.println("sequence: "+P3.memoryManager.retrieveSequence(sequence.getFileHandle()));
+		}
 	}
 }

@@ -217,7 +217,7 @@ public class InternalNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node remove(SavedSequence sequence) {
+	public Node remove(Sequence sequence) {
 		if (sequence.hasNext()) {
 			// Take the next character
 			final char sequenceChar = sequence.next();
