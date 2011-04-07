@@ -8,9 +8,7 @@
  *         has been added to the DNA Tree.
  */
 public class SequenceLeafNode implements Node {
-	private SavedSequence sequence; // Sequence data contained in this node
-	private SequenceFileHandle fileHandle; // References where the sequence is
-											// stored
+	private SavedSequence savedSequence; // Sequence data contained in this node
 
 	/**
 	 * Constructs a SequenceNode given a Sequence
@@ -18,7 +16,7 @@ public class SequenceLeafNode implements Node {
 	 * @param sequence
 	 */
 	public SequenceLeafNode(SavedSequence sequence) {
-		this.sequence = sequence;
+		this.savedSequence = sequence;
 	}
 
 	/**
@@ -27,7 +25,7 @@ public class SequenceLeafNode implements Node {
 	 */
 	@Override
 	public void print() {
-		System.out.println(sequence.toString());
+		System.out.println(savedSequence.toString() + " stored at "+savedSequence.getFileHandle());
 	}
 
 	/**
@@ -47,7 +45,7 @@ public class SequenceLeafNode implements Node {
 		// At least one of the sequences should have more characters.
 		// If they don't that indicates a duplicate. We could also compare
 		// sequences here
-		if (this.sequence.equals(sequence)) {
+		if (this.savedSequence.equals(sequence)) {
 			// Otherwise, we must have the identical sequence
 			P3.duplicateSequenceError(sequence);
 			// Return this so not modify tree structure
@@ -65,15 +63,13 @@ public class SequenceLeafNode implements Node {
 	 * @return the Node that should replace this Node OR self to keep the same
 	 */
 	@Override
-	public Node remove(Sequence sequence) {
+	public Node remove(Sequence sequenceID) {
 		// Verify this is a matching sequence
-		if (this.sequence.equals(sequence)) {
-			System.out.println("FH:"+fileHandle);
-			System.out.println("S:"+toString());
-			P3.memoryManager.removeSequence(fileHandle);
+		if (this.savedSequence.equals(sequenceID)) {
+			P3.memoryManager.removeSequence(savedSequence.getFileHandle());
 			return EmptyLeafNode.getInstance();
 		} else {
-			P3.sequenceNotFound(sequence);
+			P3.sequenceNotFound(sequenceID);
 			return this;
 		}
 	}
@@ -85,11 +81,11 @@ public class SequenceLeafNode implements Node {
 	@Override
 	public void search(SearchCommand searchData) {
 		searchData.incrementNodesVisited();
-		if ((searchData.matchExact() && this.sequence.equals(searchData
+		if ((searchData.matchExact() && this.savedSequence.equals(searchData
 				.getSearchSequence())) || !searchData.matchExact()) {
 			// If we are in strict mode, and sequences match exactly, we can add
 			// the match
-			searchData.matchFound(this.sequence);
+			searchData.matchFound(this.savedSequence);
 		}
 	}
 
@@ -97,7 +93,7 @@ public class SequenceLeafNode implements Node {
 	 * @return the sequence
 	 */
 	public SavedSequence getSequence() {
-		return sequence;
+		return savedSequence;
 	}
 
 	/**
@@ -105,7 +101,7 @@ public class SequenceLeafNode implements Node {
 	 *            the sequence to set
 	 */
 	public void setSequence(SavedSequence sequence) {
-		this.sequence = sequence;
+		this.savedSequence = sequence;
 	}
 
 	/**
@@ -113,6 +109,6 @@ public class SequenceLeafNode implements Node {
 	 */
 	@Override
 	public String toString() {
-		return sequence.toString();
+		return savedSequence.toString();
 	}
 }

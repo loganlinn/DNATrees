@@ -73,14 +73,15 @@ public class CommandFile {
 	 * @throws IOException
 	 * @throws P3Exception
 	 */
-	public void parse(Tree tree, MemoryManager memoryManager) throws IOException, P3Exception {
+	public void parse(Tree tree, MemoryManager memoryManager)
+			throws IOException, P3Exception {
 
 		File commandFile = new File(this.commandFilePath);
 		FileInputStream fileStream;
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				new DataInputStream(new FileInputStream(commandFile))));
-		String line, command, argument=null;
+		String line, command, argument = null;
 		int length;
 		boolean commandHasArgument;
 		while ((line = br.readLine()) != null) {
@@ -89,49 +90,58 @@ public class CommandFile {
 			if (lineTokens.hasMoreTokens()) {
 				command = lineTokens.nextToken();
 
-				if (INSERT_COMMAND.equals(command)) {
+				if (INSERT_COMMAND.equals(command))
+				{
 					/*
 					 * Insert command
 					 */
-					argument = getNextArgument(lineTokens);//sequenceId
-					//length = getNextIntArgument(lineTokens);//length
-//					commandList.add(new InsertCommand(argument, length));
-					tree.insert(new SavedSequence(argument, memoryManager.storeSequence(br.readLine())));
-				} else if (REMOVE_COMMAND.equals(command)) {
+					argument = getNextArgument(lineTokens);// sequenceId
+					// length = getNextIntArgument(lineTokens);//length
+					tree.insert(new SavedSequence(argument, memoryManager
+							.storeSequence(br.readLine())));
+					
+				}
+				else if (REMOVE_COMMAND.equals(command))
+				{
 					/*
 					 * Remove command
 					 */
 					argument = getNextArgument(lineTokens);
-//					commandList.add(new RemoveCommand(argument));
 					tree.remove(new Sequence(argument));
-				} else if (PRINT_COMMAND.equals(command)) {
+				}
+				else if (PRINT_COMMAND.equals(command))
+				{
 					/*
 					 * Print command
 					 */
-//					commandList.add(new PrintCommand());
 					tree.print();
-				} else if (SEARCH_COMMAND.equals(command)) {
+				}
+				else if (SEARCH_COMMAND.equals(command))
+				{
 					/*
 					 * Search command, find the mode
 					 */
 					argument = getNextArgument(lineTokens); // argument is a
 															// sequence
 															// descriptor
-					if (argument != null) {
-//						commandList.add(new SearchCommand(argument));
+					if (argument != null)
+					{
 						tree.search(new SearchCommand(argument));
-					} else {
+						
+					}
+					else
+					{
 						throw new P3Exception(SEARCH_COMMAND
 								+ " missing argument." + getLineNumberMessage());
 					}
-				} else {
+				}
+				else
+				{
 					// The command isn't recognized, throw an exception
 					throw new P3Exception(UNKNOWN_COMMAND_ERROR_PREFIX
 							+ command + getLineNumberMessage());
 				}
 
-				System.out.println("Ran command: " + command + (argument==null?"":" "+argument));
-				argument = null;
 			}
 		}
 

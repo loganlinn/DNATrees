@@ -1,6 +1,7 @@
 
 public class SavedSequence extends Sequence {
 	private final SequenceFileHandle fileHandle;
+	
 	public SavedSequence(String sequenceId, SequenceFileHandle fileHandle) {
 		super(sequenceId);
 		this.fileHandle = fileHandle;
