@@ -176,10 +176,10 @@ public class MemoryManager {
 	 */
 	public static String decode(byte[] data, int length) {
 		StringBuilder sb = new StringBuilder();
-		if (getEncodedSequenceLength(length) > data.length) {
-			System.err.println("length does not match data");
-			return null;
-		}
+//		if (getEncodedSequenceLength(length) > data.length) {
+//			System.err.println("Length does not match data!");
+//			return null;
+//		}
 		int byteInd = 0, charsDecoded = 0;
 		while (charsDecoded < length) {
 			byte b = data[byteInd];
@@ -409,13 +409,13 @@ public class MemoryManager {
 		 */
 		public void print() {
 			if (freeBlocks.isEmpty()) {
-				System.out.println("Free Block List: none");
+				System.out.println("  Free Block List: none");
 				return;
 			}
-			System.out.println("Free Block List:");
+			System.out.println("  Free Block List:");
 			int i = 0;
 			for (FreeBlock block : freeBlocks) {
-				System.out.println("[Block " + (++i) + "] " + block.toString());
+				System.out.println("  [Block " + (++i) + "] " + block.toString());
 			}
 		}
 

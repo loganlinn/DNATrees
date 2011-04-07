@@ -25,7 +25,7 @@ public class LeafNode implements Node {
 	 */
 	@Override
 	public void print() {
-		System.out.println(savedSequence.toString() + " ["+savedSequence.getFileHandle()+"]");
+		System.out.println("  "+savedSequence.toString() + " ["+savedSequence.getFileHandle()+"]");
 	}
 
 	/**

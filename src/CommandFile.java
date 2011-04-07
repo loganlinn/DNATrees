@@ -53,6 +53,7 @@ public class CommandFile {
 
 	/**
 	 * Returns the next token in the string token, and parses it as an int
+	 * 
 	 * @param tokenizer
 	 * @return
 	 * @throws NumberFormatException
@@ -85,12 +86,20 @@ public class CommandFile {
 		int length;
 		while ((line = br.readLine()) != null) {
 			lineNumber++;
+			/**
+			 * Supported commented out lines!
+			 */
+			if (line.startsWith("#")) {
+				continue;
+			}
+			
+			// Use a tokenizer to ignore whitespace and iterate trough command
 			StringTokenizer lineTokens = new StringTokenizer(line);
+			
 			if (lineTokens.hasMoreTokens()) {
 				command = lineTokens.nextToken();
 
-				if (INSERT_COMMAND.equals(command))
-				{
+				if (INSERT_COMMAND.equals(command)) {
 					/*
 					 * Insert command
 					 */
@@ -98,44 +107,33 @@ public class CommandFile {
 					// length = getNextIntArgument(lineTokens);//length
 					tree.insert(new SavedSequence(argument, memoryManager
 							.storeSequence(br.readLine())));
-					
-				}
-				else if (REMOVE_COMMAND.equals(command))
-				{
+
+				} else if (REMOVE_COMMAND.equals(command)) {
 					/*
 					 * Remove command
 					 */
 					argument = getNextArgument(lineTokens);
 					tree.remove(new Sequence(argument));
-				}
-				else if (PRINT_COMMAND.equals(command))
-				{
+				} else if (PRINT_COMMAND.equals(command)) {
 					/*
 					 * Print command
 					 */
 					tree.print();
-				}
-				else if (SEARCH_COMMAND.equals(command))
-				{
+				} else if (SEARCH_COMMAND.equals(command)) {
 					/*
 					 * Search command, find the mode
 					 */
 					argument = getNextArgument(lineTokens); // argument is a
 															// sequence
 															// descriptor
-					if (argument != null)
-					{
+					if (argument != null) {
 						tree.search(new SearchCommand(argument));
-						
-					}
-					else
-					{
+
+					} else {
 						throw new P3Exception(SEARCH_COMMAND
 								+ " missing argument." + getLineNumberMessage());
 					}
-				}
-				else
-				{
+				} else {
 					// The command isn't recognized, throw an exception
 					throw new P3Exception(UNKNOWN_COMMAND_ERROR_PREFIX
 							+ command + getLineNumberMessage());
@@ -146,6 +144,10 @@ public class CommandFile {
 
 	}
 
+	/**
+	 * Format a message indicating which line number is currently being parsed
+	 * @return
+	 */
 	private String getLineNumberMessage() {
 		return LINE_NUMBER_MESSAGE_PREFIX + lineNumber
 				+ LINE_NUMBER_MESSAGE_SUFFIX;
