@@ -32,8 +32,6 @@ public class CommandFile {
 	private String commandFilePath; // Path to command file
 	private int lineNumber = 0; // Tracks which line of the command file we are
 								// parsing
-	private PrintStream out = System.out; // Assign output to a print stream for
-											// configurability
 
 	/**
 	 * Constructs a CommandFile given the path to a command file
@@ -75,7 +73,7 @@ public class CommandFile {
 	 * @throws IOException
 	 * @throws P3Exception
 	 */
-	public void parse() throws SequenceException, IOException, P3Exception {
+	public void parse(Tree tree) throws SequenceException, IOException, P3Exception {
 
 		File commandFile = new File(this.commandFilePath);
 		FileInputStream fileStream;
@@ -131,7 +129,7 @@ public class CommandFile {
 							+ command + getLineNumberMessage());
 				}
 
-				out.println("CREATED:" + command);
+				System.out.println("Ran command: " + command);
 			}
 		}
 

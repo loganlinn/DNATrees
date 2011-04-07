@@ -133,11 +133,15 @@ public class P3 {
 		 */
 		Tree dnaTree = new Tree();
 		
+		
+		
 		/*
 		 * Attempt to parse the command file, catching any errors
 		 */
 		try {
-			commandFile.parse();
+			SequenceFileManager sequenceManager = new SequenceFileManager();
+			commandFile.parse(dnaTree);
+			sequenceManager.close();
 		} catch (SequenceException e) {
 			System.out.println(e.getMessage());
 			return;
@@ -150,10 +154,6 @@ public class P3 {
 		}
 
 		
-
-		/*
-		 * Execute the remaining commands from the command file
-		 */
 	}
 
 	/**
